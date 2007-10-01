@@ -94,13 +94,14 @@
      (zero-matrix (matrix-size matrix))))))
 
 ;; e^A
+;; @correct
 (define (const-matrix-exp matrix n)
-  ((matrix-exp (lambda (x) matrix) 0 n) 1))
+  ((matrix-exp (lambda (x) matrix) n) 0 1 0))
 
-(define (variable-matrix n)
+(define (variable-matrix f)
   (lambda (x)
     (list (list 0         1)
-          (list (- (n x)) 0))))
+          (list (- (f x)) 0))))
 
 ;; n(x)
 (define (f x)
@@ -111,15 +112,21 @@
 (define (build-fundamental a b n function)
   (define matrix
     (variable-matrix function))
-  (if (>= a b)
-      (identity-matrix 2)
-      (matrix-*-matrix
-       ((matrix-exp matrix 5)
-        (- b (/ (- b a) (* 2 n))) 
-        b
-        (- b (/ (- b a) n)))
-       (build-fundamental a (- b (/ (- b a) n)) (- n 1) function))))
-
+  (define (iter a b n result)
+    (if (>= a b)
+        result
+        (iter a 
+              (- b (/ (- b a) n)) 
+              (- n 1)
+              (matrix-*-matrix
+               result
+               ;; e^{A(\overline{x_i})(x_i - x_{i-1})}
+               ((matrix-exp matrix 5)
+                (- b (/ (- b a) (* 2 n))) 
+                b
+                (- b (/ (- b a) n)))))))
+  (iter a b n (identity-matrix 2)))
+  
 (define (find-a-b k a n function)
   (let ((fundamental (build-fundamental 0 a n function)))
     (define (w i j)
@@ -133,6 +140,13 @@
       (list (- (w 2 1) (* (w 2 2) +i k)) (- (* (exp (* +i k a)) +i k))))
      (list (- (- (* (w 1 2) +i k)) (w 1 1))
            (- (- (* (w 2 2) +i k)) (w 2 1))))))
+
+;; Check whether found a, b coefficients meet the conservation of
+;; energy law
+;; |A|^2 + |B|^2 = 1
+(define (energy-conserves? solution eps)
+  (< (abs (- 1 (+ (expt (magnitude (car solution)) 2)
+                  (expt (magnitude (cadr solution)) 2)))) eps))
 
 ;; Simpliest version of Gauss method solving
 ;; @correct
