@@ -3,26 +3,15 @@
 
 (use-modules (srfi srfi-1))
 
-(define (accumulate op initial sequence)
-  (if (null? sequence)
-      initial
-      (op (car sequence)
-          (accumulate op
-                      initial
-                      (cdr sequence)))))
-
+;;@ $\sum \limits_n s_n$
 (define (sum sequence)
-  (accumulate + 0 sequence))
+  (fold + 0 sequence))
 
-(define (accumulate-n op initial seqs)
-  (if (null? (car seqs))
-      (list)
-      (cons (accumulate op initial (map car seqs))
-            (accumulate-n op initial (map cdr seqs)))))
-
+;;@ $( \ldots ((a_n x + a_{n-1})x + a_{n-2}) x \ldots + a_1)x + a_0)$
 (define (general-horner-eval x coefficient-sequence mult add zero)
-  (accumulate (lambda (this-coeff higher-terms)
-                (add (mult higher-terms x) this-coeff))
+  (fold-right (lambda (this-coeff higher-terms)
+                (add (mult higher-terms x)
+                     this-coeff))
               zero
               coefficient-sequence))
 
@@ -30,38 +19,49 @@
 (define (matrix-size m)
   (length m))
 
+;;@ $A = (a_{ij})_{m \times n} \to A^T = (a_{ji})_{n \times m}$
 (define (transpose m)
-  (accumulate-n cons (list) m))
+  (array->list
+   (transpose-array 
+    (list->array (list (length m) 
+                       (length (car m))) 
+                 m)
+    1 0)))
 
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
     (map (lambda (row)
            (map (lambda (col) 
-                  (accumulate + 0 (map * row col)))
+                  (sum (map * row col)))
                 cols))
          m)))
 
+;;@ $A \times \vec{v}$
 (define (matrix-*-vector matrix vector)
   (matrix-*-matrix matrix (map list vector)))
 
-(define (matrix-*-number m n)
+;;@ $A = (a_{ij}) \to A \cdot c = (a_{ij} \cdot c)$
+(define (matrix-*-number matrix n)
   (map
    (lambda (row)
      (map (lambda (x) (* x n)) row))
-   m))
+   matrix))
 
+;;@ $M + N = (m_{ij} + n_{ij})$
 (define (add-matrices m n)
   (map 
    (lambda (row1 row2)
      (map + row1 row2))
    m n))
 
+;;@ $A = (a_{ij} = 0)_{n \times n}$
 (define (zero-matrix n)
   (map (lambda (row)
          (map (lambda (i) 0)
               (enumerate-n n)))
        (enumerate-n n)))
 
+;;@ $A = (a_{ij} = \delta^i_j)_{n \times n}$
 (define (identity-matrix n)
   (map (lambda (row)
          (map (lambda (i) (if (= i row)
@@ -70,18 +70,17 @@
               (enumerate-n n)))
        (enumerate-n n)))
 
+;;@ $l, l+1 \ldots h-1, h$
 (define (enumerate-interval low high)
   (if (> low high)
       (list)
       (cons low (enumerate-interval (+ low 1) high))))
 
+;;@ $1, 2, 3 \ldots n$
 (define (enumerate-n n)
   (enumerate-interval 1 n))
 
-;; Produce a_{s_1}, a_{s_2}, ... a_{s_n} sequence,
-;; where a_{s_k} = f(a_{s_{k-1}}, s_k)
-;; 
-;; n > 0
+;;@ $a_{s_1}, a_{s_2} \ldots a_{s_n}$, $a_{s_k} = f(a_{s_{k-1}}, s_k)$
 (define (evolve-sequence evolve initial index)
   (define (iter index prev result)
     (if (null? index)
@@ -92,18 +91,17 @@
                 (append result (list current))))))
   (iter index initial (list initial)))
 
-;; Produce a_1, a_2, ... a_n sequence
+;;@ $a_1, a_2 \ldots a_n$
 (define (evolve-series evolve initial n)
   (evolve-sequence evolve initial (enumerate-n n)))
 
-;; 1/0!, 1/1!, 1/2!, .. 1/n!
+;;@ $1/0!, 1/1!, 1/2! \ldots 1/n!$
 (define (exp-series-coefficients n)
   (evolve-series (lambda (prev i) (/ prev i)) 
                  1
                  (- n 1)))
   
-;; f(x, y, z) = e^{A(x)(y-z)}
-;; @correct
+;;@ $f(x, y, z) = e^{A(x)(y-z)}$
 (define (matrix-exp A n)
   (lambda (x y z)
     (let ((matrix (A x)))
@@ -111,20 +109,19 @@
      (matrix-*-number matrix (- y z))
      (exp-series-coefficients n)
      matrix-*-matrix
-     (lambda (high-terms coeff) (add-matrices high-terms
-                                              (matrix-*-number 
-                                               (identity-matrix (matrix-size matrix))
-                                               coeff)))
+     (lambda (high-terms coeff)
+       (add-matrices high-terms
+                     (matrix-*-number 
+                      (identity-matrix (matrix-size matrix))
+                      coeff)))
      (zero-matrix (matrix-size matrix))))))
 
-;; e^A
-;; @correct
+;;@ $e^A$
 (define (const-matrix-exp matrix n)
   ((matrix-exp (lambda (x) matrix) n) 0 1 0))
 
 
 ;; Simpliest version of Gauss method solving
-;; @correct
 (define (solve-linear coeff vector)
   ;; Make all zeroes in `coeff` first column (except first row)
   (define (diag-matrix-step)
@@ -236,46 +233,41 @@
      (enumerate-n (length approximation)))))
 
 ;; Check whether found a, b coefficients meet the conservation of
-;; energy law: |A|² + |B|² = 1
-(define (energy-conserves? solution eps)
-  (< (abs (- 1 (+ (expt (magnitude (car solution)) 2)
-                  (expt (magnitude (cadr solution)) 2)))) eps))
+;; energy law:
+;;@ $|A|^2 + |B|^2 = 1$
+(define (energy-conserves? A B eps)
+  (< (abs (- 1 
+             (+ (expt (magnitude A) 2)
+                (expt (magnitude B) 2))))
+     eps))
 
 ;; workflow:
-;;
+;; 
 ;; (define (n x) (..))
 ;; (define (variable-matrix f) (..))
 ;; (define fundamentals (build-fundamentals 0.0 a 10^n (variable-matrix n)))
 ;; (define coeffs (find-A-B fundamentals k a))
 ;; (define A (car coeffs))
 ;; (define B (cadr coeffs))
-;;
+;; 
 ;; (define solution (approximate-solution fundamentals A k a))
 
 
-;; n(x)
-(define (f x)
+;;@ $n(x) = \left \{ \begin{array}{ll} 35+3(x-1)^2 & 0<x<2\\ 36 & x \leq 0, x \geq 2 \end{array} \right .$
+(define (function x)
   (if (and (< x 2) (> x 0))
       (+ 35 (* 3 (expt (- x 1) 2)))
       36))
 
-(define (g x)
-  (cond ((and (< 0 x) (> 1 x))
-         (- 28 (* 3 x)))
-        ((and (>= x 1) (> 2 x))
-         (+ 28 (* -12 (expt (- x 1.5) 2))))
-        (else
-         25)))
-
-;(define (print-all-solution a b k n f)
+;; (define (print-all-solution a b k n f)
 
 (let ((a 0)
       (b 2)
-      (k 1)
-      (f g)
+      (k 6)
+      (f function)
       (n 200))
   (let ((fundamentals (build-fundamentals a b n (variable-matrix f))))
     (let ((coeffs (find-A-B fundamentals k b)))
       (let ((approx (approximate-solution fundamentals (car coeffs) k b)))
         (print-approximate approx a b)))))
-;)
+;; )
