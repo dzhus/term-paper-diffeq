@@ -1,9 +1,3 @@
-define(sourcefile, maketemp(/tmp/sourceXXXXXX))
-syscmd(cat diff-eq.scm\
-       | grep -v `"[ ]*;; .*"' \
-       | sed -e `"s/^\([ ]*\);;@ /\1;; /"' \
-       > sourcefile)
-changequote(,)
 \lstdefinelanguage[guile]{Scheme}
         {morekeywords={define,let,map,lambda,if,cond,or,and,else},
          morecomment=[l]{;},
@@ -12,6 +6,9 @@ changequote(,)
 \lstset{language=[guile]Scheme}
 %\lstset{numbers=left,stepnumber=10,numberblanklines=false}
 \lstset{basicstyle=\footnotesize}
+
+\section{Решение методом построения фундаментальной матрицы}
+
 \begin{lstlisting}
-include(sourcefile)
+__SRC__
 \end{lstlisting}
