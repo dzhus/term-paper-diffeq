@@ -1,51 +1,17 @@
 (use-modules (srfi srfi-1))
 
-(define (enumerate i j)
-  (if (= i j)
-      (list j)
-      (append (list i) (enumerate (+ i 1) j))))
+(load "shared.scm")
+(load "matrices.scm")
 
-(define (enumerate-n n)
-  (enumerate 1 n))
-
-(define (make-row . items)
-  items)
-
-(define (make-matrix . rows)
-  rows)
-
-(define (make-vector . items)
-  items)
-
-(define (add-to-vector vector . items)
-  (append vector items))
-
-(define (get-row n matrix)
-  (list-ref matrix (- n 1)))
-
-(define (get-column n matrix)
-  (map (lambda (row) (list-ref row (- n 1)))
-       matrix))
-
-(define (first-row matrix)
-  (get-row 1 matrix))
-
-(define (first-column matrix)
-  (get-column 1 matrix))
-
-(define (matrix-size matrix)
-  (length matrix))
-
-(define (count-rows matrix)
-  (length matrix))
-
-(define (square? matrix)
-  (=
-   (length (get-row 1 matrix))
-   (length (get-column 1 matrix))))
-
-(define (sum sequence)
-  (fold + 0 sequence))
+(define (max-nonzero-index lst)
+  (fold
+   (lambda (i prev)
+     (if (> (real-part (list-ref lst (- i 1)))
+            (real-part (list-ref lst (- prev 1))))
+         i
+         prev))
+   1
+   (enumerate-n (length lst))))
 
 (define (swap-items i j lst)
   (map
@@ -55,16 +21,6 @@
          (if (= index j)
              (list-ref lst (- i 1))
              (list-ref lst (- index 1)))))
-   (enumerate-n (length lst))))
-
-(define (max-nonzero-index lst)
-  (fold
-   (lambda (i prev)
-     (if (> (list-ref lst (- i 1))
-            (list-ref lst (- prev 1)))
-         i
-         prev))
-   1
    (enumerate-n (length lst))))
 
 ;; Solve a linear system with square matrix A, given A is invertible
