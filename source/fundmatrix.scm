@@ -5,23 +5,23 @@
 (load "gauss.scm")
 
 ;; Build a sequence of fundamental matrix approximations for each x_i
-;; in [a; b] divided by n parts given a matrix of differential
+;; in [0; right-bound] divided by n parts given a matrix of differential
 ;; equation d²(u) / dx² + n(x)u = 0
-(define (build-fundamentals a b n matrix)
-  (let ((step (/ (- b a) 
-                 n)))
+(define (build-fundamentals right-bound n matrix)
+  (let ((a right-bound)
+        (step (/ right-bound n)))
     (evolve-sequence
-     (lambda (prev b)
+     (lambda (prev a)
        (matrix-*-matrix
         prev
         ((matrix-exp matrix 5)
-         (- b (/ step 2))
-         b
-         (- b step))))
+         (- a (/ step 2))
+         a
+         (- a step))))
      (identity-matrix 2)
      (evolve-series
       (lambda (prev n) (+ prev step))
-      a
+      0
       n))))
 
 ;; For d²(u) / dx² + f(x)u = 0
@@ -50,7 +50,7 @@
            (- (- (* (w 2 2) +i k)) (w 2 1))))))
 
 ;; Approximate u(x) on [0; right-bound] given a sequence of
-;; fundamental matrices
+;; fundamental matrices and A, k coefficients
 (define (approximate-solution fundamentals A k right-bound)
   (let ((n (length fundamentals)))
     (map
@@ -63,21 +63,6 @@
                (* +i k (- 1 A))))))
      fundamentals)))     
 
-;; Tabulate approximate solution (sutiable for plotting tools)
-(define (print-approximate approximation a b)
-  (let ((step (/ (- b a)
-                 (length approximation))))
-    (for-each
-     (lambda (n)
-       (let ((z (list-ref approximation (- n 1))))
-         (display (+ a (* (- n 0.5) step)))
-         (display " ")
-         (display (real-part z))
-         (display " ")
-         (display (imag-part z))
-         (newline)))
-     (enumerate-n (length approximation)))))
-
 ;; Check whether found a, b coefficients meet the conservation of
 ;; energy law:
 ;;@ $|A|^2 + |B|^2 = 1$
@@ -86,24 +71,3 @@
              (+ (expt (magnitude A) 2)
                 (expt (magnitude B) 2))))
      eps))
-
-;;@ $n(x) = \left \{ \begin{array}{ll} 35+3(x-1)^2 & 0<x<2\\ 36 & x \leq 0, x \geq 2 \end{array} \right .$
-(define (function x)
-  (if (and (< x 2) (> x 0))
-      (+ 35 (* 3 (expt (- x 1) 2)))
-      36))
-
-;; (define (print-all-solution a b k n f)
-
-;; To be replaced
-;; (define (workit)
-  (let ((a 0)
-      (b 2)
-      (k 6)
-      (f function)
-      (n 200))
-  (let ((fundamentals (build-fundamentals a b n (variable-matrix f))))
-    (let ((coeffs (find-A-B fundamentals k b)))
-      (let ((approx (approximate-solution fundamentals (car coeffs) k b)))
-        (print-approximate approx a b)))))
-;; )

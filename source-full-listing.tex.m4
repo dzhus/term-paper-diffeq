@@ -4,5 +4,5 @@ syscmd(cat target_source\
        | sed -e `"s/^\([ ]*\);;@ /\1;; /"' \
        > tmpsourcefile)
 define(__SRC__, `include(tmpsourcefile)')
-changequote(~^,^~)
-include(~^source-full-listing.tpl.tex^~)
+changequote(,)
+include(source-full-listing.tpl.tex)
