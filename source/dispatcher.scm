@@ -9,26 +9,25 @@
       ;; a]
       (right-bound
        (single-char #\a)
-       (value #t)
-       (required? #t))
+       (value #t) (required? #t))
        ;; k
        (wave-number
         (single-char #\k)
-        (value #t)
-        (required? #t))
+        (value #t) (required? #t))
        (subintervals
-        (single-char #\n)
-        (value #t))
+        (single-char #\n) (value #t))
        (function-file
         (single-char #\f)
-        (value #t)
-        (required? #t))
+        (value #t) (required? #t))
        ))
   (let* ((options (getopt-long args option-spec))
-         (a (string->number (option-ref options 'right-bound 2)))
-         (k (string->number (option-ref options 'wave-number 5)))
-         (n (string->number (option-ref options 'subintervals 100)))
-         (function-file (option-ref options 'function-file "statement")))
+         (a (string->number
+             (option-ref options 'right-bound 2)))
+         (k (string->number
+             (option-ref options 'wave-number 5)))
+         (n (string->number
+             (option-ref options 'subintervals 100)))
+         (function-file (option-ref options 'function-file "statement.scm")))
     (load function-file)
     (print-all-solution a k n f)))
   
@@ -48,9 +47,24 @@
          (newline)))
      (enumerate-n (length approximation)))))
 
+(define (print-A-B coeffs)
+  (let ((A (car coeffs))
+        (B (caadr coeffs)))
+  (display "A: ")
+  (display A)
+  (newline)
+  (display "B: ")
+  (display B)
+  (newline)
+  (if (energy-conserves? A B 0.0001)
+      (display "success")
+      (display "fail"))
+  ))
+
 ;; Print approximate solution (tabulate u(x)) given right bound of
 ;; interval, wave number, subintervals count and refraction function
-(define (print-all-solution right-bound wave-number subintervals function)
+(define (print-all-solution right-bound wave-number
+                            subintervals function)
   (let* ((fundamentals (build-fundamentals right-bound
                                            subintervals
                                            (variable-matrix f)))
@@ -60,4 +74,5 @@
          (approx (approximate-solution fundamentals
                                        (car coeffs)
                                        wave-number right-bound)))
-    (print-approximate approx 0 right-bound)))
+    (print-approximate approx 0 right-bound)
+    (print-A-B coeffs)))

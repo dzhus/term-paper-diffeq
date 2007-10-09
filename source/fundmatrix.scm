@@ -42,11 +42,11 @@
        (list-ref fundamental (- i 1))
        (- j 1)))
     (solve-linear
-     (list
+     (make-matrix
       ;; @todo Rewrite using infix package
-      (list (- (w 1 1) (* (w 1 2) +i k)) (- (exp (* +i k a))))
-      (list (- (w 2 1) (* (w 2 2) +i k)) (- (* (exp (* +i k a)) +i k))))
-     (list (- (- (* (w 1 2) +i k)) (w 1 1))
+      (make-row (- (w 1 1) (* (w 1 2) +i k)) (- (exp (* +i k a))))
+      (make-row (- (w 2 1) (* (w 2 2) +i k)) (- (* (exp (* +i k a)) +i k))))
+     (make-vector (- (- (* (w 1 2) +i k)) (w 1 1))
            (- (- (* (w 2 2) +i k)) (w 2 1))))))
 
 ;; Approximate u(x) on [0; right-bound] given a sequence of

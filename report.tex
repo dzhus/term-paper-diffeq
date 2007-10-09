@@ -1,8 +1,14 @@
 \documentclass{article}
 \usepackage[utf8x]{inputenc}
 \usepackage[russian]{babel}
+
 \usepackage{listings}
 \usepackage{amsmath,amssymb}
+
+\usepackage{graphics}
+
+\DeclareGraphicsExtensions{.mps,.pdf,.eps}
+
 %\usepackage{concmath}
 %\usepackage{euler}
 
@@ -209,7 +215,18 @@ i$.
 
 \subsection{Реализация}
 
+Описание основных процедур, необходимых для реализации метода,
+находится в файле \texttt{source/fundmatrix.scm} (его полное содержание
+приведено на странице \pageref{fundmatrix.scm-full-listing}).
+
+\subsection{Исходные данные}
+\label{sec:initial}
+
+\input{initial-data}
+
 \subsection{Результаты}
+
+%\input{fm-solutions}
 
 \section{Решение методом последовательных приближений}
 
@@ -219,12 +236,13 @@ i$.
 
 \subsection{Результаты}
 
+Исходные данные к задаче приведены в разделе \ref{sec:initial} на
+странице \pageref{sec:initial}.
+
 \section{Сопоставление результатов}
 
 \newpage
 \appendix
 \part{Исходные тексты}
-
-\input{fundmatrix-full-listing}
 
 \end{document}
