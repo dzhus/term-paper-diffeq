@@ -1,9 +1,10 @@
 ;; This file contains initial data for «problem statement»
-;;
-;; It must contain definition of a function (n x) preceded by one-line
-;; `;;@ ` comments at top-level, as well as comment lines starting
-;; with `;;@ ` characters containg pairs of the following variables
-;; and values (example):
+;; 
+;; It must contain definition of a function (f x) preceded by one-line
+;; `;;@ ` comments at top-level with TeX $n(x)$ function definition,
+;; as well as comment lines starting with `;;@ ` characters containg
+;; pairs of the following variables and values (example):
+;; 
 ;; right-bound 2
 ;; wave-number 3
 ;; subintervals 100

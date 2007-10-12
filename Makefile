@@ -1,6 +1,8 @@
 export ROOT := $(abspath .)
+
 export SOURCEDIR := ${ROOT}/source
 export DOCDIR := ${ROOT}/doc
+
 export INITIAL_DATA_FILE := ${SOURCEDIR}/statement.scm
 
 .PHONY: doc clean
