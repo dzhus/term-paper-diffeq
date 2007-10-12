@@ -19,8 +19,9 @@ define(NTEX, `esyscmd(cat tmpfile \
                      | sed -e "s/\$//g" \
                      | tr -d "\n")')
 
-define(NLISP, `esyscmd(cat target_statement \
-                       | grep -v "^;;" \
-                       | grep "(\|)")')
+define(NLISP, `esyscmd(emacs --batch \
+                             --load get-tag.el \
+                             --exec "(print-tag-from-file \"f\" \"target_statement\")" \
+                             &> /dev/stdout)')
 
 include(initial-data.tpl.tex)
