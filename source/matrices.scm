@@ -21,6 +21,9 @@
   (map (lambda (row) (list-ref row (- n 1)))
        matrix))
 
+(define (row-item n row)
+  (list-ref row (- n 1)))
+
 (define (first-row matrix)
   (get-row 1 matrix))
 

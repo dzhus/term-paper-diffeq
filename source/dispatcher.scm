@@ -18,7 +18,10 @@
         (single-char #\n) (value #t))
        (function-file
         (single-char #\f)
-        (value #t) (required? #t))
+        (value #t) (required? #f))
+       (test-epsilon
+        (single-char #\t)
+        (value #t) (required? #f))
        ))
   (let* ((options (getopt-long args option-spec))
          (a (string->number
@@ -27,9 +30,11 @@
              (option-ref options 'wave-number 5)))
          (n (string->number
              (option-ref options 'subintervals 100)))
-         (function-file (option-ref options 'function-file "statement.scm")))
+         (function-file (option-ref options 'function-file "statement.scm"))
+         (epsilon (string->number
+                   (option-ref options 'test-epsilon 0.0001))))
     (load function-file)
-    (print-all-solution a k n f)))
+    (print-all-solution a k n f epsilon)))
   
 ;; Tabulate approximate solution (suitable for plotting tools) given a
 ;; list of values and min/max variable values
@@ -47,7 +52,7 @@
          (newline)))
      (enumerate-n (length approximation)))))
 
-(define (print-A-B coeffs)
+(define (print-A-B coeffs test-eps)
   (let ((A (car coeffs))
         (B (caadr coeffs)))
   (display "A: ")
@@ -56,15 +61,18 @@
   (display "B: ")
   (display B)
   (newline)
-  (if (energy-conserves? A B 0.0001)
+  (if (energy-conserves? A B test-eps)
       (display "success")
       (display "fail"))
+  (newline)
+  (display "eps: ")
+  (display test-eps)
   ))
 
 ;; Print approximate solution (tabulate u(x)) given right bound of
 ;; interval, wave number, subintervals count and refraction function
 (define (print-all-solution right-bound wave-number
-                            subintervals function)
+                            subintervals function test-eps)
   (let* ((fundamentals (build-fundamentals right-bound
                                            subintervals
                                            (variable-matrix f)))
@@ -75,4 +83,4 @@
                                        (car coeffs)
                                        wave-number right-bound)))
     (print-approximate approx 0 right-bound)
-    (print-A-B coeffs)))
+    (print-A-B coeffs test-eps)))

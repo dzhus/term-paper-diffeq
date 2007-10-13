@@ -19,10 +19,8 @@
          a
          (- a step))))
      (identity-matrix 2)
-     (evolve-series
-      (lambda (prev n) (+ prev step))
-      0
-      n))))
+     (evolve-series (lambda (prev n) (+ prev step))
+                    0 n))))
 
 ;; For d²(u) / dx² + f(x)u = 0
 (define (variable-matrix f)
@@ -37,8 +35,9 @@
   (let ((fundamental (list-ref fundamentals
                                (- (length fundamentals) 1)))
         (a right-bound))
+    ;; Get j-th item in i-th row of 
     (define (w i j)
-      (car (get-column (get-row fundamental j) i)))
+      (row-item j (get-row i fundamental)))
     (solve-linear
      (make-matrix
       ;; @todo Rewrite using infix package
