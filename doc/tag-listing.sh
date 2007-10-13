@@ -6,7 +6,7 @@
 # 
 #     ./tag-listing.sh TAG-NAME FILE-NAME
 #
-# Output is a LaTeX code with tag source ready for inclusion in
+# Output is LaTeX code with tag source ready for inclusion in
 # document using `\input`.
 
 

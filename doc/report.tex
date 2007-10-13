@@ -3,6 +3,17 @@
 \usepackage[english,russian]{babel}
 
 \usepackage{listings}
+
+\lstdefinelanguage[guile]{Scheme}
+        {morekeywords={define,let,map,lambda,if,cond,or,and,else},
+         morecomment=[l]{;},
+         morestring=[b]{"}}
+\lstset{mathescape=true}
+\lstset{language=[guile]Scheme}
+%\lstset{numbers=left,stepnumber=10,numberblanklines=false}
+\lstset{basicstyle=\footnotesize}
+\lstset{frame=tBl,frameround=tttt}
+
 \usepackage{amsmath,amssymb}
 
 \usepackage{graphics}
