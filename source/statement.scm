@@ -18,6 +18,6 @@
       36))
 
 ;;@ right-bound 2
-;;@ wave-number 5
+;;@ wave-number 6
 ;;@ subintervals 200
 ;;@ test-epsilon 0.000001

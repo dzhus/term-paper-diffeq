@@ -21,7 +21,10 @@ initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex
 %-results: ${INITIAL_DATA_FILE} results.sh
 	$(SHELL) results.sh $< $* dispatcher.scm ${SOURCEDIR} > $@
 
-%-results.tex: %-results texify-results.sh results.tpl.tex
+%-plot.mps: %-results plot-results.sh plot.tpl.mp
+	$(SHELL) plot-results.sh $<
+
+%-results.tex: %-results %-plot.mps texify-results.sh results.tpl.tex
 	$(SHELL) texify-results.sh $< > $@
 
 ${DOCNAME}.aux: ${DOCNAME}.tex
