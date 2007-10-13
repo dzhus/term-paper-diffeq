@@ -9,15 +9,14 @@ ifneq (${MAKELEVEL}, 0)
 
 .PHONY: doc clean ${SOURCEDIR}
 
-%-full-listing.tex: ${SOURCEDIR}/% source-full-listing.tex.m4 source-full-listing.tpl.tex
-	m4 --define=target_source=${SOURCEDIR}/$(subst -full-listing.tex,,$@)\
-	   source-full-listing.tex.m4 > $@
+%-full-listing.tex: ${SOURCEDIR}/% source-full-listing.sh source-full-listing.tpl.tex
+	$(SHELL) source-full-listing.sh $< > $@
 
 %-tag-listing.tex: ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/.*__//") tag-listing.sh tag-listing.tpl.tex get-tag.el
 	$(SHELL) tag-listing.sh $(shell echo $* | sed -e "s/__.*//") $< > $@
 
 initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex
-	$(SHELL) initial-data.sh ${INITIAL_DATA_FILE} > $@
+	$(SHELL) initial-data.sh $< > $@
 
 ${DOCNAME}.aux: ${DOCNAME}.tex
 	@$(info Rebuilding aux file)
