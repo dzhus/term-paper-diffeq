@@ -27,8 +27,8 @@
 ;; For d²(u) / dx² + f(x)u = 0
 (define (variable-matrix f)
   (lambda (x)
-    (list (list 0         1)
-          (list (- (f x)) 0))))
+    (make-matrix (make-vector 0         1)
+                 (make-vector (- (f x)) 0))))
 
 ;; Find A, B coefficients of wave equations given a sequence of
 ;; fundamental matrices built for interval [0; right-bound] and k
@@ -38,9 +38,7 @@
                                (- (length fundamentals) 1)))
         (a right-bound))
     (define (w i j)
-      (list-ref
-       (list-ref fundamental (- i 1))
-       (- j 1)))
+      (car (get-column (get-row fundamental j) i)))
     (solve-linear
      (make-matrix
       ;; @todo Rewrite using infix package
@@ -59,8 +57,8 @@
        (caar
         (matrix-*-vector
          matrix
-         (list (+ 1 A)
-               (* +i k (- 1 A))))))
+         (make-vector (+ 1 A)
+                      (* +i k (- 1 A))))))
      fundamentals)))     
 
 ;; Check whether found a, b coefficients meet the conservation of
