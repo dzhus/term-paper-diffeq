@@ -38,7 +38,7 @@
     (load-from-path function-file)
     (if (string=? method "fm")
         (load-from-path "fundmatrix.scm"))
-    (print-all-solution a k n f epsilon)))
+    (print-all-solution a k n f epsilon method)))
   
 ;; Tabulate approximate solution (suitable for plotting tools) given a
 ;; list of values and min/max variable values
@@ -65,9 +65,10 @@
   (display "B: ")
   (display B)
   (newline)
+  (display "conserves: ")
   (if (energy-conserves? A B test-eps)
-      (display "success")
-      (display "fail"))
+      (display "yes")
+      (display "no"))
   (newline)
   (display "eps: ")
   (display test-eps)
@@ -76,7 +77,8 @@
 ;; Print approximate solution (tabulate u(x)) given right bound of
 ;; interval, wave number, subintervals count and refraction function
 (define (print-all-solution right-bound wave-number
-                            subintervals function test-eps)
+                            subintervals function
+                            test-eps method-alias)
   (let* ((fundamentals (build-fundamentals right-bound
                                            subintervals
                                            (variable-matrix f)))
@@ -87,4 +89,9 @@
                                        (car coeffs)
                                        wave-number right-bound)))
     (print-approximate approx 0 right-bound)
-    (print-A-B coeffs test-eps)))
+    (display "%%")
+    (newline)
+    (print-A-B coeffs test-eps)
+    (newline)
+    (display "method: ")
+    (display method-alias)))

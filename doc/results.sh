@@ -1,5 +1,8 @@
 #!/bin/bash
-
+#
+# Parse initial data file and call dispatcher code to produce results
+# suitable for further processing.
+#
 # Usage:
 #
 #     ./results.sh INITIAL-DATA-FILE METHOD DISPATCHER SOURCES-DIR
@@ -30,6 +33,6 @@ SUBINTERVALS=$(cat ${TEMPFILE} | grep subintervals | \
 EPSILON=$(cat ${TEMPFILE} | grep test-epsilon | \
     sed -e "s/^.* //" | tr -d "[:space:]")
 
-guile -L ${LOAD_PATH} -e dispatch ${DISPATCHER} \
+guile -L ${LOAD_PATH} -e dispatch ${LOAD_PATH}/${DISPATCHER} \
     -a ${RIGHTBOUND} -k ${WAVENUMBER} -n ${SUBINTERVALS} \
     -t ${EPSILON} -m ${METHOD} --function-file ${DATAFILE}

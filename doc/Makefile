@@ -1,5 +1,5 @@
 DOCNAME := report
-${DOCNAME}_depend := $(shell texdepend -print=i -format=make report.tex \
+${DOCNAME}_depend := $(shell texdepend -print=i -format=make ${DOCNAME}.tex \
 			     | head -n 1 \
 			     | sed -e "s/^.*= //")
 
@@ -19,13 +19,17 @@ initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex
 	$(SHELL) initial-data.sh $< > $@
 
 %-results: ${INITIAL_DATA_FILE} results.sh
-	$(SHELL) results.sh $< $* ${SOURCEDIR}/dispatcher.scm ${SOURCEDIR} > $@
+	$(SHELL) results.sh $< $* dispatcher.scm ${SOURCEDIR} > $@
+
+%-results.tex: %-results texify-results.sh results.tpl.tex
+	$(SHELL) texify-results.sh $< > $@
 
 ${DOCNAME}.aux: ${DOCNAME}.tex
 	@$(info Rebuilding aux file)
 	pdflatex ${DOCNAME}.tex
 
 ${DOCNAME}.pdf: ${${DOCNAME}_depend} report.aux
+	@$(info Depends on $<)
 	pdflatex ${DOCNAME}.tex
 
 doc: ${DOCNAME}.pdf
