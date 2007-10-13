@@ -17,14 +17,10 @@ NTEX=`cat ${TEMPFILE} | grep ';;@ \$n(x)' | \
 
 # Extract Lisp definition
 
-emacs --batch --load get-tag.el \
-    --exec "(print-tag-from-file \"f\" \"$1\")" \
-    &> ${TEMPFILE}
+NLISP=`./tag-listing.sh f $1`
 
-NLISP=`cat ${TEMPFILE}`
-
-m4 --define="NLISP"="${NLISP}" \
-    --define="NTEX"="${NTEX}" \
-    --define="RIGHTBOUND"="${RIGHTBOUND}" \
-    --define="WAVENUMBER"="${WAVENUMBER}" \
+m4 --define="__NLISP"="${NLISP}" \
+    --define="__NTEX"="${NTEX}" \
+    --define="__RIGHTBOUND"="${RIGHTBOUND}" \
+    --define="__WAVENUMBER"="${WAVENUMBER}" \
     initial-data.tpl.tex

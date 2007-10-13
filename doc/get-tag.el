@@ -9,6 +9,7 @@
         (to (semantic-tag-end tag))
         (buffer (semantic-tag-buffer tag)))
     (switch-to-buffer buffer)
+    (message "%%%%")
     (message (buffer-substring from to))))
 
 (defun print-tag-from-file (tag-name file-name)
