@@ -20,3 +20,4 @@
 ;;@ right-bound 2
 ;;@ wave-number 5
 ;;@ subintervals 200
+;;@ test-epsilon 0.000001

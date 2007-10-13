@@ -27,17 +27,17 @@
   (let* ((options (getopt-long args option-spec))
          (method (option-ref options 'method "fm"))
          (a (string->number
-             (option-ref options 'right-bound 2)))
+             (option-ref options 'right-bound "2")))
          (k (string->number
-             (option-ref options 'wave-number 5)))
+             (option-ref options 'wave-number "5")))
          (n (string->number
-             (option-ref options 'subintervals 100)))
+             (option-ref options 'subintervals "100")))
          (function-file (option-ref options 'function-file "statement.scm"))
          (epsilon (string->number
-                   (option-ref options 'test-epsilon 0.0001))))
-    (load function-file)
+                   (option-ref options 'test-epsilon "0.0001"))))
+    (load-from-path function-file)
     (if (string=? method "fm")
-        (load "fundmatrix.scm"))
+        (load-from-path "fundmatrix.scm"))
     (print-all-solution a k n f epsilon)))
   
 ;; Tabulate approximate solution (suitable for plotting tools) given a

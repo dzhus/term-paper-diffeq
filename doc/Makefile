@@ -18,6 +18,9 @@ ifneq (${MAKELEVEL}, 0)
 initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex
 	$(SHELL) initial-data.sh $< > $@
 
+%-results: ${INITIAL_DATA_FILE} results.sh
+	$(SHELL) results.sh $< $* ${SOURCEDIR}/dispatcher.scm ${SOURCEDIR} > $@
+
 ${DOCNAME}.aux: ${DOCNAME}.tex
 	@$(info Rebuilding aux file)
 	pdflatex ${DOCNAME}.tex
