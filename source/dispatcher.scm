@@ -1,11 +1,12 @@
 (use-modules (ice-9 getopt-long))
 
-(load "fundmatrix.scm")
-
 ;; The «do stuff» procedure
 (define (dispatch args)
   (define option-spec
     '(
+      (method
+       (single-char #\m)
+       (value #t) (required? #t))
       ;; a]
       (right-bound
        (single-char #\a)
@@ -24,6 +25,7 @@
         (value #t) (required? #f))
        ))
   (let* ((options (getopt-long args option-spec))
+         (method (option-ref options 'method "fm"))
          (a (string->number
              (option-ref options 'right-bound 2)))
          (k (string->number
@@ -34,6 +36,8 @@
          (epsilon (string->number
                    (option-ref options 'test-epsilon 0.0001))))
     (load function-file)
+    (if (string=? method "fm")
+        (load "fundmatrix.scm"))
     (print-all-solution a k n f epsilon)))
   
 ;; Tabulate approximate solution (suitable for plotting tools) given a
