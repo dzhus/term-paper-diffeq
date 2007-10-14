@@ -25,8 +25,8 @@
 ;; For d²(u) / dx² + n(x)u = 0
 (define (variable-matrix n)
   (lambda (x)
-    (make-matrix (make-vector 0         1)
-                 (make-vector (- (n x)) 0))))
+    (make-matrix (make-row 0         1)
+                 (make-row (- (n x)) 0))))
 
 ;; Find A, B coefficients of wave equations given a sequence of
 ;; fundamental matrices built for interval [0; right-bound] and k
@@ -54,7 +54,6 @@
   (let ((n (length fundamentals)))
     (map
      (lambda (matrix)
-       ;; u(x) is a sum of first row
        (caar
         (matrix-*-vector
          matrix
