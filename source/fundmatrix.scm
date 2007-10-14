@@ -22,11 +22,11 @@
      (evolve-series (lambda (prev n) (+ prev step))
                     0 n))))
 
-;; For d²(u) / dx² + f(x)u = 0
-(define (variable-matrix f)
+;; For d²(u) / dx² + n(x)u = 0
+(define (variable-matrix n)
   (lambda (x)
     (make-matrix (make-vector 0         1)
-                 (make-vector (- (f x)) 0))))
+                 (make-vector (- (n x)) 0))))
 
 ;; Find A, B coefficients of wave equations given a sequence of
 ;; fundamental matrices built for interval [0; right-bound] and k
@@ -35,20 +35,22 @@
   (let ((fundamental (list-ref fundamentals
                                (- (length fundamentals) 1)))
         (a right-bound))
-    ;; Get j-th item in i-th row of 
     (define (w i j)
       (row-item j (get-row i fundamental)))
     (solve-linear
      (make-matrix
-      ;; @todo Rewrite using infix package
-      (make-row (- (w 1 1) (* (w 1 2) +i k)) (- (exp (* +i k a))))
-      (make-row (- (w 2 1) (* (w 2 2) +i k)) (- (* (exp (* +i k a)) +i k))))
-     (make-vector (- (- (* (w 1 2) +i k)) (w 1 1))
-           (- (- (* (w 2 2) +i k)) (w 2 1))))))
+      (make-row (- (w 1 1) (* (w 1 2) +i k))
+                (- (exp (* +i k a))))
+      (make-row (- (w 2 1) (* (w 2 2) +i k)) 
+                (- (* (exp (* +i k a)) +i k))))
+     (make-vector 
+      (- (- (* (w 1 2) +i k)) (w 1 1))
+      (- (- (* (w 2 2) +i k)) (w 2 1))))))
 
 ;; Approximate u(x) on [0; right-bound] given a sequence of
 ;; fundamental matrices and A, k coefficients
-(define (approximate-solution fundamentals A k right-bound)
+(define (approximate-solution fundamentals
+                              A k right-bound)
   (let ((n (length fundamentals)))
     (map
      (lambda (matrix)

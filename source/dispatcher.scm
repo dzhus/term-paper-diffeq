@@ -43,19 +43,19 @@
   
 ;; Tabulate approximate solution (suitable for plotting tools) given a
 ;; list of values and min/max variable values
-(define (print-approximate approximation from to)
+(define (print-approximate solution from to)
   (let ((step (/ (- to from)
-                 (length approximation))))
+                 (length solution))))
     (for-each
      (lambda (n)
-       (let ((z (list-ref approximation (- n 1))))
+       (let ((z (list-ref solution (- n 1))))
          (display (+ from (* (- n 0.5) step)))
          (display " ")
          (display (real-part z))
          (display " ")
          (display (imag-part z))
          (newline)))
-     (enumerate-n (length approximation)))))
+     (enumerate-n (length solution)))))
 
 (define (print-A-B coeffs test-eps)
   (let ((A (car coeffs))

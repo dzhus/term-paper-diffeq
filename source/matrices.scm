@@ -100,17 +100,17 @@
 (define (matrix-exp A n)
   (lambda (x y z)
     (let ((matrix (A x)))
-    (general-horner-eval
-     (matrix-*-number matrix (- y z))
-     (exp-series-coefficients n)
-     matrix-*-matrix
-     (lambda (high-terms coeff)
-       (add-matrices high-terms
-                     (matrix-*-number 
-                      (identity-matrix (matrix-size matrix))
-                      coeff)))
-     (zero-matrix (matrix-size matrix))))))
+      (general-horner-eval
+       (matrix-*-number matrix (- y z))
+       (exp-series-coefficients n)
+       matrix-*-matrix
+       (lambda (high-terms coeff)
+         (add-matrices high-terms
+                       (matrix-*-number 
+                        (identity-matrix (matrix-size matrix))
+                        coeff)))
+       (zero-matrix (matrix-size matrix))))))
 
-;;@ $e^A$
+;;@ $e^A = e^{A(x)(y-z)},\ \forall x, y=1, z=0$
 (define (const-matrix-exp matrix n)
   ((matrix-exp (lambda (x) matrix) n) 0 1 0))
