@@ -1,4 +1,5 @@
 (use-modules (ice-9 getopt-long))
+(use-modules (ice-9 format))
 
 ;; The «do stuff» procedure
 (define (dispatch args)
@@ -60,10 +61,10 @@
   (let ((A (car coeffs))
         (B (caadr coeffs)))
   (display "A: ")
-  (display A)
+  (format #t "~,5i" A)
   (newline)
   (display "B: ")
-  (display B)
+  (format #t "~,5i" B)
   (newline)
   (display "conserves: ")
   (if (energy-conserves? A B test-eps)
