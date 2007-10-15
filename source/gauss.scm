@@ -54,7 +54,7 @@
   (if (= (matrix-size coeffs) 1)
       ;; Solve trivial equation (ax=c) immediately
       (if (= (top-left coeffs) 0)
-          #f
+          (error "Zero determinant!" coeffs)
           (make-vector (/ (car vector)
                           (top-left coeffs))))
       ;; Choose maximum non-zero element in first column and make that

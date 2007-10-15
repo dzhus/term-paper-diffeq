@@ -30,9 +30,6 @@
 (define (first-column matrix)
   (get-column 1 matrix))
 
-(define (matrix-size matrix)
-  (length matrix))
-
 (define (count-rows matrix)
   (length matrix))
 
