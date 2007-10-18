@@ -43,3 +43,12 @@
   (evolve-series (lambda (prev i) (/ prev i)) 
                  1
                  (- n 1)))
+
+;; Check whether found a, b coefficients meet the conservation of
+;; energy law:
+;;@ $|A|^2 + |B|^2 = 1$
+(define (energy-conserves? A B eps)
+  (< (abs (- 1 
+             (+ (expt (magnitude A) 2)
+                (expt (magnitude B) 2))))
+     eps))
