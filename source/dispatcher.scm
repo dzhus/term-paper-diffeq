@@ -4,27 +4,26 @@
 ;; The «do stuff» procedure
 (define (dispatch args)
   (define option-spec
-    '(
-      (method
+    '((method
        (single-char #\m)
        (value #t) (required? #t))
       ;; a]
       (right-bound
        (single-char #\a)
        (value #t) (required? #t))
-       ;; k
-       (wave-number
-        (single-char #\k)
-        (value #t) (required? #t))
-       (subintervals
-        (single-char #\n) (value #t))
-       (function-file
-        (single-char #\f)
-        (value #t) (required? #f))
-       (test-epsilon
-        (single-char #\t)
-        (value #t) (required? #f))
-       ))
+      ;; k
+      (wave-number
+       (single-char #\k)
+       (value #t) (required? #t))
+      (subintervals
+       (single-char #\n) (value #t))
+      (function-file
+       (single-char #\f)
+       (value #t) (required? #f))
+      (test-epsilon
+       (single-char #\t)
+       (value #t) (required? #f))
+      ))
   (let* ((options (getopt-long args option-spec))
          (method (option-ref options 'method "fm"))
          (a (string->number
@@ -40,7 +39,7 @@
     (if (string=? method "fm")
         (load-from-path "fundmatrix.scm"))
     (print-all-solution a k n f epsilon method)))
-  
+
 ;; Tabulate approximate solution (suitable for plotting tools) given a
 ;; list of values and min/max variable values
 (define (print-approximate solution from to)
