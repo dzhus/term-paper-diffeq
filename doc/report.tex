@@ -15,6 +15,9 @@
 \lstset{frame=tb,frameround=ffff}
 \lstset{breaklines=true,breakautoindent=true}
 
+\newcommand{\filename}[1]{\texttt{#1}}
+\newcommand{\procname}[1]{\texttt{#1}}
+
 \usepackage{amsmath,amssymb}
 
 \usepackage{graphics}
@@ -229,7 +232,7 @@ i$.
 \subsection{Реализация}
 
 Описание основных процедур, необходимых для реализации метода,
-находится в файле \texttt{fundmatrix.scm} (его полное содержание
+находится в файле \filename{fundmatrix.scm} (его полное содержание
 приведено на странице \pageref{fundmatrix.scm-full-listing}).
 
 В исходном тексте программы активно используются последовательные
@@ -237,49 +240,49 @@ i$.
 
 Так, основной вычислительный процесс метода — построение приближений
 фундаментальной матрицы — выражен в процедуре
-\texttt{build-fundamentals}:
+\procname{build-fundamentals}:
 
 \input{build-fundamentals__fundmatrix.scm-tag-listing}
 
-\texttt{build-fundamentals} представляет последовательность вычислений
+\procname{build-fundamentals} представляет последовательность вычислений
 фундаментальной матрицы на интервалах $[x_i; x_{i+1}]$ в виде частного
-случая функции \texttt{evolve-sequence}, возвращающей
+случая функции \procname{evolve-sequence}, возвращающей
 последовательность $a_{s_1} \ldots a_{s_n}$, где $a_{s_k} =
 f(a_{s_{k-1}}, s_{k-1})$
 (см. с. \pageref{shared.scm-full-listing}). Из определения
-\texttt{build-fundamentals} видно, что роль $s_k$ выполняют точки $x_i
+\procname{build-fundamentals} видно, что роль $s_k$ выполняют точки $x_i
 = \frac{a}{N}i$ с $i = 1 \ldots N$, а $a_{s_{k-1}}$ — приближение
 фундаментальной матрицы на предыдущем отрезке (на первом шаге
 $\Omega_N$ приближается единичной матрицей). Комбинируются же эти
 значения при помощи матричного умножения, как следует из \eqref{fmx}.
 
-Процедура \texttt{variable-matrix} возвращает матрицу $A$ системы
+Процедура \procname{variable-matrix} возвращает матрицу $A$ системы
 \eqref{mdeq} для заданной по условию функции $n(x)$:
 
 \input{variable-matrix__fundmatrix.scm-tag-listing}
 
-Возвращённая матрица потом используется в \texttt{build-fundamentals}.
+Возвращённая матрица потом используется в \procname{build-fundamentals}.
 
 Вычисление матричной экспоненты в каждой точке выражено через
-процедуру высшего порядка \texttt{general-horner-eval}, представляющую
+процедуру высшего порядка \procname{general-horner-eval}, представляющую
 собой обобщённую схему Горнера:
 
 \input{general-horner-eval__shared.scm-tag-listing}
 
-\texttt{general-horner-eval}, в свою очередь, является частным случаем
-процедуры высшего порядка \texttt{fold-right}, реализующей свёртку
+\procname{general-horner-eval}, в свою очередь, является частным случаем
+процедуры высшего порядка \procname{fold-right}, реализующей свёртку
 последовательности справа налево.
 
-Наконец, процедура \texttt{matrix-exp} — вычисление по схеме Горнера,
+Наконец, процедура \procname{matrix-exp} — вычисление по схеме Горнера,
 где операции сложения и умножения являются матричными:
 
 \input{matrix-exp__matrices.scm-tag-listing}
 
 В этой функции последовательность коэффициентов матричного многочлена
 $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
-процедурой \texttt{exp-series-coefficients}
+процедурой \procname{exp-series-coefficients}
 (см. с. \pageref{shared.scm-full-listing}), выраженной в терминах уже
-упоминавшейся ранее \texttt{evolve-sequence}.
+упоминавшейся ранее \procname{evolve-sequence}.
 
 После построения последовательности фундаментальных матриц
 осуществляется поиск коэффициентов $A, B$ путём решения системы
@@ -289,15 +292,15 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 \input{find-A-B__fundmatrix.scm-tag-listing}
 
 С использованием найденного коэффициента $A$ и приближений из
-\texttt{build-fundamentals} в процедуре \texttt{approximate-solution}
+\procname{build-fundamentals} в процедуре \procname{approximate-solution}
 расчитывается и приближённое решения исходного уравнения \eqref{deq}
 внутри неоднородного слоя:
 
 \input{approximate-solution__fundmatrix.scm-tag-listing}
 
 При расчёте найденные значения $A$ и $B$ проверяется на удовлетворение
-тождеству \eqref{energy} предикатом \texttt{energy-conserves?} из
-\texttt{shared.scm}:
+тождеству \eqref{energy} предикатом \procname{energy-conserves?} из
+\filename{shared.scm}:
 
 \input{energy-conserves?__shared.scm-tag-listing}
 
