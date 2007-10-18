@@ -2,8 +2,9 @@ DOCNAME := report
 ${DOCNAME}_depend := $(shell texdepend -print=i -format=make ${DOCNAME}.tex \
 			     | head -n 1 \
 			     | sed -e "s/^.*= //")
-
 ifneq (${MAKELEVEL}, 0)
+
+.PRECIOUS: %-plot.mps
 
 .SECONDEXPANSION:
 
@@ -27,11 +28,11 @@ initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex
 %-results.tex: %-results %-plot.mps texify-results.sh results.tpl.tex
 	$(SHELL) texify-results.sh $< > $@
 
-${DOCNAME}.aux: ${DOCNAME}.tex
+${DOCNAME}.aux: ${${DOCNAME}_depend} ${DOCNAME}.tex
 	@$(info Rebuilding aux file)
 	pdflatex ${DOCNAME}.tex
 
-${DOCNAME}.pdf: ${${DOCNAME}_depend} report.aux
+${DOCNAME}.pdf: report.aux
 	@$(info Depends on $<)
 	pdflatex ${DOCNAME}.tex
 

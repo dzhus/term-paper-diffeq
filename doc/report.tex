@@ -12,7 +12,8 @@
 \lstset{language=[guile]Scheme}
 %\lstset{numbers=left,stepnumber=10,numberblanklines=false}
 \lstset{basicstyle=\footnotesize}
-\lstset{frame=tBl,frameround=tttt}
+\lstset{frame=tb,frameround=ffff}
+\lstset{breaklines=true,breakautoindent=true}
 
 \usepackage{amsmath,amssymb}
 
@@ -287,12 +288,20 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 
 \input{find-A-B__fundmatrix.scm-tag-listing}
 
-С использованием найденного коэффициента $A$ в процедуре
-\texttt{approximate-solution} расчитывается и приближённое решения
-исходного уравнения \eqref{deq} внутри неоднородного слоя:
+С использованием найденного коэффициента $A$ и приближений из
+\texttt{build-fundamentals} в процедуре \texttt{approximate-solution}
+расчитывается и приближённое решения исходного уравнения \eqref{deq}
+внутри неоднородного слоя:
 
 \input{approximate-solution__fundmatrix.scm-tag-listing}
 
+При расчёте найденные значения $A$ и $B$ проверяется на удовлетворение
+тождеству \eqref{energy} предикатом \texttt{energy-conserves?} из
+\texttt{shared.scm}:
+
+\input{energy-conserves?__shared.scm-tag-listing}
+
+\newpage
 \subsection{Исходные данные}
 \label{sec:initial}
 
@@ -307,8 +316,10 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 
 \subsection{Описание}
 
+\newpage
 \subsection{Реализация}
 
+\newpage
 \subsection{Результаты}
 
 Исходные данные к задаче приведены в разделе \ref{sec:initial} на
