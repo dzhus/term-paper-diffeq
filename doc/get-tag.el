@@ -1,4 +1,6 @@
 (require 'semantic)
+(require 'semanticdb)
+(semanticdb-toggle-global-mode)
 
 ;; Return a Semantic tag table for file
 (defun get-file-tags (file-name)
@@ -12,7 +14,7 @@
         (to (semantic-tag-end tag))
         (buffer (semantic-tag-buffer tag)))
     (with-current-buffer buffer
-      (message (buffer-substring from to)))))
+      (buffer-substring from to))))
 
 ;; Return a list of tags from tag-table which are also mentioned in
 ;; tag
@@ -26,9 +28,10 @@
                        tag))
                tag-table)))
     (switch-to-buffer buffer)
-;    (message "%d" from)
     (let (result)
-      (dolist (lexem (semantic-lex from to 50) result)
+      ;; cddddr is a Lisp-oriented hack to prevent tag itself from
+      ;; inclusion to dependency list
+      (dolist (lexem (cddddr (semantic-lex from to 50)) result)
         (if (eq 'symbol (car lexem))
             (let* ((lexem-string (buffer-substring 
                                   (cadr lexem)
@@ -42,27 +45,19 @@
 (defun print-tag-from-file (tag-name file-name)
   (interactive "sTag name: \nfFile name: ")
   (let ((tag-table (get-file-tags file-name)))
-    (message "%%%%")
-    (message (get-tag-body 
-              (semantic-find-first-tag-by-name
-               tag-name
-               tag-table)))))
+    (message "%%%%%s BODY" tag-name)
+    (message "%s" 
+             (get-tag-body 
+              (semantic-find-first-tag-by-name tag-name tag-table)))))
 
-;; Return a list of tags which specified tag depends on (== mentions
-;; symbolic names of them)
-(defun print-tag-deep-deps-from-file (tag-name file-name)
-  (interactive "sTag name: \nfFile name: ")
-  (with-current-buffer 
-      (find-file-noselect file-name)
-    (let ((tag-table (semanticdb-strip-find-results
-                      (semanticdb-find-tags-by-class
-                       'function))))
-      (let ((deps (get-tag-deps 
-                   (semantic-find-first-tag-by-name
-                    tag-name tag-table)
-                   tag-table)))
-        (dolist (tag deps)
-          (message (semantic-tag-name tag)))))))
+;; Print a list of all functions declared in specified file
+(defun print-file-functions (file-name)
+  (let ((tag-table (semantic-find-tags-by-class
+                    'function
+                    (get-file-tags file-name))))
+    (message "%%%% TAGS")
+    (dolist (tag tag-table)
+      (message "%s" (semantic-tag-name tag)))))
 
 (defun print-depgraph (file-name)
   (interactive "fFile name: ")
@@ -71,13 +66,14 @@
     (let ((deep-tag-table (semanticdb-strip-find-results
                            (semanticdb-find-tags-by-class
                             'function)))
-          (file-tag-table (semantic-fetch-tags)))
+          (file-tag-table (semantic-find-tags-by-class
+                           'function
+                           (semantic-fetch-tags))))
+      (message "%%%% DEPS")
       (dolist (tag file-tag-table)
         (let ((deps (get-tag-deps tag deep-tag-table)))
           (dolist (dependency deps)
-            (message "%s depends on %s"
-                     (semantic-tag-name tag)
-                     (semantic-tag-name dependency))))
-        (message "\n")))))
-              
-        
+            (message (semantic-tag-components-with-overlays-default tag))
+            (message "%s %s"
+                     (semantic-tag-name dependency)
+                     (semantic-tag-name tag))))))))
