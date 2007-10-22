@@ -88,11 +88,6 @@
               (enumerate-n n)))
        (enumerate-n n)))
 
-(define (square? matrix)
-  (=
-   (length (get-row 1 matrix))
-   (length (get-column 1 matrix))))
-
 ;;@ $f(x, y, z) = e^{A(x)(y-z)}$
 (define (matrix-exp A n)
   (lambda (x y z)
