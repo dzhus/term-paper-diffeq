@@ -24,9 +24,6 @@
 
 \DeclareGraphicsExtensions{.mps,.pdf,.eps}
 
-%\usepackage{concmath}
-%\usepackage{euler}
-
 \numberwithin{equation}{section}
 
 \begin{document}
@@ -211,7 +208,7 @@ x_{i+1}]$ фундаментальная матрица \eqref{fm} имеет в
 
 Для нахождения матричной экспоненты используется формула Тейлора:
 
-\begin{equation}
+\begin{equation}\label{matrix-exp}
 \begin{split}
   e^{A_i(x-x_i)} \approx E +& \frac{1}{1!}{A_i(x-x_i)} +
   \frac{1}{2!}{A_i^2(x-x_i)^2}\\
@@ -239,7 +236,7 @@ i$.
 определения функций в терминах друг друга.
 
 Так, основной вычислительный процесс метода — построение приближений
-фундаментальной матрицы — выражен в процедуре
+фундаментальной матрицы — выражен в функции
 \procname{build-fundamentals}:
 
 \input{build-fundamentals__fundmatrix.scm-tag-listing}
@@ -256,33 +253,36 @@ f(a_{s_{k-1}}, s_{k-1})$
 $\Omega_N$ приближается единичной матрицей). Комбинируются же эти
 значения при помощи матричного умножения, как следует из \eqref{fmx}.
 
-Процедура \procname{variable-matrix} возвращает матрицу $A$ системы
+Функция \procname{variable-matrix} возвращает матрицу $A$ системы
 \eqref{mdeq} для заданной по условию функции $n(x)$:
 
 \input{variable-matrix__fundmatrix.scm-tag-listing}
 
 Возвращённая матрица потом используется в \procname{build-fundamentals}.
 
-Вычисление матричной экспоненты в каждой точке выражено через
-процедуру высшего порядка \procname{general-horner-eval}, представляющую
-собой обобщённую схему Горнера:
-
-\input{general-horner-eval__shared.scm-tag-listing}
-
-\procname{general-horner-eval}, в свою очередь, является частным случаем
-процедуры высшего порядка \procname{fold-right}, реализующей свёртку
-последовательности справа налево.
-
-Наконец, процедура \procname{matrix-exp} — вычисление по схеме Горнера,
-где операции сложения и умножения являются матричными:
+В \procname{build-fundamentals} используется и функция
+\procname{matrix-exp} (см. файл \filename{matrices.scm} на
+с. \pageref{matrices.scm-full-listing}), вычисляющая матричную
+экспоненту $f(x, y, z) = e^{A(x)(y-z)}$ путём разложения в ряд Тейлора
+\eqref{matrix-exp} с использованием схемы Горнера:
 
 \input{matrix-exp__matrices.scm-tag-listing}
 
 В этой функции последовательность коэффициентов матричного многочлена
 $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
-процедурой \procname{exp-series-coefficients}
-(см. с. \pageref{shared.scm-full-listing}), выраженной в терминах уже
-упоминавшейся ранее \procname{evolve-sequence}.
+функцией \procname{exp-series-coefficients}
+(см. с. \pageref{shared.scm-full-listing}), выраженной в терминах
+вышеупомянутой \procname{evolve-sequence}.
+
+Вычисление матричной экспоненты в каждой точке выражено через
+функцию высшего порядка \procname{general-horner-eval}, представляющую
+собой обобщённую схему Горнера:
+
+\input{general-horner-eval__shared.scm-tag-listing}
+
+\procname{general-horner-eval}, в свою очередь, является частным случаем
+функции высшего порядка \procname{fold-right}, реализующей свёртку
+последовательности справа налево.
 
 После построения последовательности фундаментальных матриц
 осуществляется поиск коэффициентов $A, B$ путём решения системы
@@ -292,7 +292,8 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 \input{find-A-B__fundmatrix.scm-tag-listing}
 
 С использованием найденного коэффициента $A$ и приближений из
-\procname{build-fundamentals} в процедуре \procname{approximate-solution}
+\procname{build-fundamentals} в функции
+\procname{approximate-solution} согласно \eqref{fmsolution}
 расчитывается и приближённое решения исходного уравнения \eqref{deq}
 внутри неоднородного слоя:
 
@@ -339,10 +340,15 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 \input{matrices.scm-full-listing}
 \input{gauss.scm-full-listing}
 
+\newpage
 \section{Метод построения  фундаментальной матрицы}
 
 \input{fundmatrix.scm-full-listing}
 
+\newpage
+\section{Метод последовательных приближений}
+
+\newpage
 \section{Диспетчер}
 
 \input{dispatcher.scm-full-listing}
