@@ -16,4 +16,4 @@ emacs --batch --load get-tag.el \
     &> ${TEMPFILE}
 
 # Strip nonrelevant Emacs messages and print tag source
-cat ${TEMPFILE} | tail -n +$((`grep -n "^%%$" ${TEMPFILE}| sed -e "s/:.*//"`+1))
+cat ${TEMPFILE} | tail -n +$((`grep -n "^%% BODY" ${TEMPFILE}| sed -e "s/:.*//"`+1))

@@ -45,7 +45,7 @@
 (defun print-tag-from-file (tag-name file-name)
   (interactive "sTag name: \nfFile name: ")
   (let ((tag-table (get-file-tags file-name)))
-    (message "%%%%%s BODY" tag-name)
+    (message "%%%% BODY %s %s" tag-name file-name)
     (message "%s" 
              (get-tag-body 
               (semantic-find-first-tag-by-name tag-name tag-table)))))
@@ -55,11 +55,11 @@
   (let ((tag-table (semantic-find-tags-by-class
                     'function
                     (get-file-tags file-name))))
-    (message "%%%% TAGS")
+    (message "%%%% FUNCTIONS %s" file-name)
     (dolist (tag tag-table)
       (message "%s" (semantic-tag-name tag)))))
 
-(defun print-depgraph (file-name)
+(defun print-file-depgraph (file-name)
   (interactive "fFile name: ")
   (with-current-buffer
       (find-file-noselect file-name)
@@ -69,7 +69,7 @@
           (file-tag-table (semantic-find-tags-by-class
                            'function
                            (semantic-fetch-tags))))
-      (message "%%%% DEPS")
+      (message "%%%% DEPS %s" file-name)
       (dolist (tag file-tag-table)
         (let ((deps (get-tag-deps tag deep-tag-table)))
           (dolist (dependency deps)
