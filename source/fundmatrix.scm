@@ -19,8 +19,7 @@
          a
          (- a step))))
      (identity-matrix 2)
-     (evolve-series (lambda (prev n) (+ prev step))
-                    0 n))))
+     (evolve-series (lambda (prev n) (+ prev step)) 0 n))))
 
 ;; For d²(u) / dx² + n(x)u = 0
 (define (variable-matrix n)
@@ -49,14 +48,12 @@
 
 ;; Approximate u(x) on [0; right-bound] given a sequence of
 ;; fundamental matrices and A, k coefficients
-(define (approximate-solution fundamentals
-                              A k right-bound)
-  (let ((n (length fundamentals)))
-    (map
-     (lambda (matrix)
-       (caar
-        (matrix-*-vector
-         matrix
-         (make-vector (+ 1 A)
-                      (* +i k (- 1 A))))))
-     fundamentals)))     
+(define (approximate-solution fundamentals A k right-bound)
+  (map
+   (lambda (matrix)
+     (caar
+      (matrix-*-vector
+       matrix
+       (make-vector (+ 1 A)
+                    (* +i k (- 1 A))))))
+   fundamentals))
