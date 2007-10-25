@@ -9,7 +9,7 @@
       (find-file-noselect file-name)
     (semantic-fetch-tags)))
 
-;; Return full tag source code (suitable for 'message-ing)
+;; Return full tag source code (suitable for princ-ing)
 (defun get-tag-body (tag)
   (let ((from (semantic-tag-start tag))
         (to (semantic-tag-end tag))
@@ -46,10 +46,9 @@
 (defun print-tag-from-file (tag-name file-name)
   (interactive "sTag name: \nfFile name: ")
   (let ((tag-table (get-file-tags file-name)))
-    (message "%%%% BODY %s %s" tag-name file-name)
-    (message "%s" 
-             (get-tag-body 
-              (semantic-find-first-tag-by-name tag-name tag-table)))))
+    (princ (format "%s" 
+                   (get-tag-body 
+                    (semantic-find-first-tag-by-name tag-name tag-table))))))
 
 ;; Get a list of all 'function tags declared in specified file
 (defun get-file-functions (file-name)
