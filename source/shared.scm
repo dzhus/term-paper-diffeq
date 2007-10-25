@@ -2,7 +2,7 @@
 (define (sum sequence)
   (fold + 0 sequence))
 
-;;@ $( \ldots ((a_n x + a_{n-1})x + a_{n-2}) x \ldots + a_1)x + a_0)$
+;;@ $( \ldots ((a_n \cdot x + a_{n-1}) \cdot x + a_{n-2}) \cdot x \ldots + a_1) \cdot x + a_0)$
 (define (general-horner-eval x coefficient-sequence
                              mult add zero)
   (fold-right 
@@ -50,3 +50,37 @@
              (+ (expt (magnitude A) 2)
                 (expt (magnitude B) 2))))
      eps))
+
+;; Tabulate approximate solution (suitable for plotting tools) given a
+;; list of values and min/max variable values
+(define (print-approximate solution from to)
+  (let ((step (/ (- to from)
+                 (length solution))))
+    (for-each
+     (lambda (n)
+       (let ((z (list-ref solution (- n 1))))
+         (display (+ from (* (- n 0.5) step)))
+         (display " ")
+         (display (real-part z))
+         (display " ")
+         (display (imag-part z))
+         (newline)))
+     (enumerate-n (length solution)))))
+
+(define (print-A-B coeffs test-eps)
+  (let ((A (car coeffs))
+        (B (caadr coeffs)))
+  (display "A: ")
+  (format #t "~,5i" A)
+  (newline)
+  (display "B: ")
+  (format #t "~,5i" B)
+  (newline)
+  (display "conserves: ")
+  (if (energy-conserves? A B test-eps)
+      (display "yes")
+      (display "no"))
+  (newline)
+  (display "eps: ")
+  (display test-eps)
+  ))
