@@ -30,9 +30,6 @@
 (define (first-column matrix)
   (get-column 1 matrix))
 
-(define (count-rows matrix)
-  (length matrix))
-
 ;; Square matrix dimension
 (define (matrix-size m)
   (length m))
@@ -102,7 +99,3 @@
                         (identity-matrix (matrix-size matrix))
                         coeff)))
        (zero-matrix (matrix-size matrix))))))
-
-;;@ $e^A = e^{A(x)(y-z)},\ \forall x, y=1, z=0$
-(define (const-matrix-exp matrix n)
-  ((matrix-exp (lambda (x) matrix) n) 0 1 0))
