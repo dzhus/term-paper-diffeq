@@ -2,6 +2,7 @@
 (require 'semanticdb)
 (semanticdb-toggle-global-mode)
 
+
 ;; Return a Semantic tag table for file
 (defun get-file-tags (file-name)
   (with-current-buffer 
@@ -50,30 +51,45 @@
              (get-tag-body 
               (semantic-find-first-tag-by-name tag-name tag-table)))))
 
-;; Print a list of all functions declared in specified file
-(defun print-file-functions (file-name)
-  (let ((tag-table (semantic-find-tags-by-class
-                    'function
-                    (get-file-tags file-name))))
-    (message "%%%% FUNCTIONS %s" file-name)
-    (dolist (tag tag-table)
-      (message "%s" (semantic-tag-name tag)))))
+;; Get a list of all 'function tags declared in specified file
+(defun get-file-functions (file-name)
+  (semantic-find-tags-by-class
+   'function
+   (get-file-tags file-name)))
 
-(defun print-file-depgraph (file-name)
-  (interactive "fFile name: ")
+;; Get a list of all 'function tags declared in specified file and its
+;; included files
+(defun get-file-functions-deep (file-name)
   (with-current-buffer
       (find-file-noselect file-name)
-    (let ((deep-tag-table (semanticdb-strip-find-results
-                           (semanticdb-find-tags-by-class
-                            'function)))
-          (file-tag-table (semantic-find-tags-by-class
-                           'function
-                           (semantic-fetch-tags))))
-      (message "%%%% DEPS %s" file-name)
-      (dolist (tag file-tag-table)
-        (let ((deps (get-tag-deps tag deep-tag-table)))
-          (dolist (dependency deps)
-            (message (semantic-tag-components-with-overlays-default tag))
-            (message "%s %s"
+    (semanticdb-strip-find-results
+     (semanticdb-find-tags-by-class
+      'function))))
+
+;; Return a list of pairs (TAG . DEPS) where DEPS is a list of
+;; functions TAG «depends» on
+(defun get-file-depgraph (file-name)
+  (interactive "fFile name: ")
+  (let ((deep-tag-table (get-file-functions-deep file-name))
+        (file-tag-table (get-file-functions file-name))
+        (depgraph))
+    (dolist (tag file-tag-table depgraph)
+      (let ((deps (get-tag-deps tag deep-tag-table)))
+        (add-to-list 'depgraph (cons tag deps) t)))))
+
+;; Print depgraph for functions in specified files in DOT format
+;; (suitable for processing with Graphviz programs)
+(defun print-files-depgraph (&rest file-names)
+  (princ "digraph D {\n")
+  (princ "overlap=scale;\n")
+  (dolist (file file-names)
+    (let ((depgraph (get-file-depgraph file)))
+      (dolist (dep-list-for-tag depgraph)
+        (let ((function-name (semantic-tag-name 
+                         (car dep-list-for-tag))))
+          (princ (format "\"%s\";\n" function-name))
+          (dolist (dependency (cdr dep-list-for-tag))
+            (princ (format "\"%s\" -> \"%s\";\n"
                      (semantic-tag-name dependency)
-                     (semantic-tag-name tag))))))))
+                     function-name)))))))
+  (princ "}\n"))
