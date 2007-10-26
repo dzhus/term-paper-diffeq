@@ -229,8 +229,8 @@ i$.
 \subsection{Реализация}
 
 Описание основных процедур, необходимых для реализации метода,
-находится в файле \filename{fundmatrix.scm} (его полное содержание
-приведено на странице \pageref{fundmatrix.scm-full-listing}).
+находится в файле \filename{fundmatrix-solution.scm} (его полное содержание
+приведено на странице \pageref{fundmatrix-solution.scm-full-listing}).
 
 В исходном тексте программы активно используются последовательные
 определения функций в терминах друг друга.
@@ -239,7 +239,7 @@ i$.
 фундаментальной матрицы — выражен в функции
 \procname{build-fundamentals}:
 
-\input{build-fundamentals__fundmatrix.scm-tag-listing}
+\input{build-fundamentals__fundmatrix-solution.scm-tag-listing}
 
 \procname{build-fundamentals} представляет последовательность вычислений
 фундаментальной матрицы на интервалах $[x_i; x_{i+1}]$ в виде частного
@@ -256,7 +256,7 @@ $\Omega_N$ приближается единичной матрицей). Ком
 Функция \procname{variable-matrix} возвращает матрицу $A$ системы
 \eqref{mdeq} для заданной по условию функции $n(x)$:
 
-\input{variable-matrix__fundmatrix.scm-tag-listing}
+\input{variable-matrix__fundmatrix-solution.scm-tag-listing}
 
 Возвращённая матрица потом используется в \procname{build-fundamentals}.
 
@@ -289,7 +289,7 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 \eqref{abeq} с помощью метода Гаусса (его исходный код приведён на
 странице \pageref{gauss.scm-full-listing}):
 
-\input{find-A-B__fundmatrix.scm-tag-listing}
+\input{find-A-B__fundmatrix-solution.scm-tag-listing}
 
 С использованием найденного коэффициента $A$ и приближений из
 \procname{build-fundamentals} в функции
@@ -297,7 +297,7 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 рассчитывается и приближённое решение исходного уравнения \eqref{deq}
 внутри неоднородного слоя:
 
-\input{approximate-solution__fundmatrix.scm-tag-listing}
+\input{approximate-solution__fundmatrix-solution.scm-tag-listing}
 
 При расчёте найденные значения $A$ и $B$ проверяется на удовлетворение
 тождеству \eqref{energy} предикатом \procname{energy-conserves?} из
@@ -313,7 +313,7 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 
 \subsection{Результаты}
 
-\input{fm-results}
+\input{fundmatrix-results}
 
 \newpage
 \section{Решение методом последовательных приближений}
@@ -343,7 +343,7 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!} \ldots$ генерируется
 \newpage
 \section{Метод построения  фундаментальной матрицы}
 
-\input{fundmatrix.scm-full-listing}
+\input{fundmatrix-solution.scm-full-listing}
 
 \newpage
 \section{Метод последовательных приближений}

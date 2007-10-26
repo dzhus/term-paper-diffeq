@@ -27,7 +27,7 @@
        (value #t) (required? #f))
       ))
   (let* ((options (getopt-long args option-spec))
-         (method (option-ref options 'method "fm"))
+         (method (option-ref options 'method "fundmatrix"))
          (a (string->number
              (option-ref options 'right-bound "2")))
          (k (string->number
@@ -38,6 +38,6 @@
          (epsilon (string->number
                    (option-ref options 'test-epsilon "0.0001"))))
     (load-from-path function-file)
-    (if (string=? method "fm")
-        (load-from-path "fundmatrix.scm"))
+    (load-from-path (string-concatenate
+                     (list method "-solution.scm")))
     (print-all-solution a k n f epsilon method)))
