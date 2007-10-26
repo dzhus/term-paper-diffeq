@@ -11,6 +11,6 @@
 
 TEMPFILE=$(mktemp /tmp/tagXXXXXX)
 
-emacs --batch --load get-tag.el \
+emacs --batch --load grok-lisp.el \
     --exec "(print-tag-from-file \"$1\" \"$2\")" \
     2> /dev/null

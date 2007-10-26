@@ -23,6 +23,7 @@
   (let ((from (semantic-tag-start tag))
         (to (semantic-tag-end tag))
         (buffer (semantic-tag-buffer tag))
+        ;; Build associative list with tag names as keys
         (deps (mapcar 
                (lambda (tag) 
                  (cons (semantic-tag-name tag)
@@ -32,8 +33,9 @@
     (let (result)
       ;; cddddr is a Lisp-oriented hack to prevent tag itself from
       ;; inclusion to dependency list
-      (dolist (lexem (cddddr (semantic-lex from to 50)) result)
-        (if (eq 'symbol (car lexem))
+      (dolist (lexem (cddddr (semantic-lex from to 100)) result)
+        (if (or (eq 'symbol (car lexem))
+                (eq 'NAME (car lexem)))
             (let* ((lexem-string (buffer-substring 
                                   (cadr lexem)
                                   (cddr lexem)))
@@ -92,3 +94,4 @@
                      (semantic-tag-name dependency)
                      function-name)))))))
   (princ "}\n"))
+
