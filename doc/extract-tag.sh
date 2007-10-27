@@ -8,9 +8,6 @@
 #
 # Output is full tag raw source.
 
-
-TEMPFILE=$(mktemp /tmp/tagXXXXXX)
-
 emacs --batch --load grok-lisp.el \
     --exec "(print-tag-from-file \"$1\" \"$2\")" \
     2> /dev/null

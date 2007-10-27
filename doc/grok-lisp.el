@@ -50,7 +50,9 @@
   (let ((tag-table (get-file-tags file-name)))
     (princ (format "%s" 
                    (get-tag-body 
-                    (semantic-find-first-tag-by-name tag-name tag-table))))))
+                    (semantic-find-first-tag-by-name 
+                     tag-name 
+                     tag-table))))))
 
 ;; Get a list of all 'function tags declared in specified file
 (defun get-file-functions (file-name)

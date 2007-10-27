@@ -6,38 +6,34 @@
 ;; The «do stuff» procedure
 (define (dispatch args)
   (define option-spec
-    '((method
-       (single-char #\m)
-       (value #t) (required? #t))
-      ;; a]
-      (right-bound
-       (single-char #\a)
-       (value #t) (required? #t))
-      ;; k
-      (wave-number
-       (single-char #\k)
-       (value #t) (required? #t))
-      (subintervals
-       (single-char #\n) (value #t))
-      (function-file
-       (single-char #\f)
-       (value #t) (required? #f))
-      (test-epsilon
-       (single-char #\t)
-       (value #t) (required? #f))
-      ))
-  (let* ((options (getopt-long args option-spec))
-         (method (option-ref options 'method "fundmatrix"))
-         (a (string->number
-             (option-ref options 'right-bound "2")))
-         (k (string->number
-             (option-ref options 'wave-number "5")))
-         (n (string->number
-             (option-ref options 'subintervals "100")))
-         (function-file (option-ref options 'function-file "statement.scm"))
-         (epsilon (string->number
-                   (option-ref options 'test-epsilon "0.0001"))))
-    (load-from-path function-file)
-    (load-from-path (string-concatenate
-                     (list method "-solution.scm")))
-    (print-all-solution a k n f epsilon method)))
+    '((method (single-char #\m) (value #t))
+      (right-bound (single-char #\a) (value #t))
+      (wave-number (single-char #\k) (value #t))
+      (subintervals (single-char #\n) (value #t))
+      (statement-file (single-char #\f) (value #t))
+      (test-epsilon (single-char #\t) (value #t))))
+  (let ((options (getopt-long args option-spec)))
+    (let ((statement-file (option-ref options 'statement-file "statement.scm")))
+      (load-from-path statement-file)
+      (let* ((method (option-ref options 'method "fundmatrix"))
+             ;; Command line options override ones in statement file
+             (right-bound
+              (string->number
+               (option-ref options 'right-bound (number->string right-bound))))
+             (wave-number
+              (string->number
+               (option-ref options 'wave-number (number->string wave-number))))
+             (subintervals
+              (string->number
+               (option-ref options 'subintervals (number->string subintervals))))
+             (test-epsilon
+              (string->number
+               (option-ref options 'test-epsilon  (number->string test-epsilon)))))
+        (load-from-path (string-concatenate
+                         (list method "-solution.scm")))
+        (print-all-solution right-bound
+                            wave-number
+                            subintervals
+                            f
+                            test-epsilon
+                            method)))))

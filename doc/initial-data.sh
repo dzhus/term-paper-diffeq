@@ -19,10 +19,10 @@ cat $1 | grep -v "[ ]*;; .*" > ${TEMPFILE}
 # Extract numeric parameters
 
 RIGHTBOUND=$(cat ${TEMPFILE} | grep right-bound | \
-    sed -e "s/^.* //" | tr -d "[:space:]")
+    sed -e "s/(define right-bound \(.*\))/\1/")
 
 WAVENUMBER=$(cat ${TEMPFILE} | grep wave-number | \
-    sed -e "s/^.* //" | tr -d "[:space:]")
+    sed -e "s/(define wave-number \(.*\))/\1/")
 
 NTEX=$(cat ${TEMPFILE} | grep ';;@ \$n(x)' | \
     sed -e "s/;;@ //" | sed -e 's/^\$\(.*\)\$$/\1/g' | tr -d "\n")
