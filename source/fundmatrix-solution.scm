@@ -15,11 +15,11 @@
        (matrix-*-matrix
         prev
         ((matrix-exp matrix 5)
-         (- a (/ step 2))
          a
-         (- a step))))
+         (+ a (/ step 2))
+         (- a (/ step 2)))))
      (identity-matrix 2)
-     (evolve-series (lambda (prev n) (+ prev step)) 0 n))))
+     (split-interval 0 right-bound n))))
 
 ;; For d²(u) / dx² + n(x)u = 0
 (define (variable-matrix n)
