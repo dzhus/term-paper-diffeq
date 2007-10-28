@@ -13,7 +13,7 @@
    zero
    coefficient-sequence))
 
-;;@ $l,\ l+1\ \ldots\ h-1,\ h$
+;;@ $l, l+1 \ldots h-1,\ h$
 (define (enumerate-interval low high)
   (define (iter low high acc)
     (if (> low high)
@@ -21,11 +21,11 @@
         (iter low (- high 1) (cons high acc))))
   (iter low high '()))
 
-;;@ $ 1,\ 2\ \ldots\ n$
+;;@ $ 1, 2 \ldots n$
 (define (enumerate-n n)
   (enumerate-interval 1 n))
 
-;;@ $a_{s_1},\ a_{s_2}\ \ldots\ a_{s_n},\ a_{s_k} = f(a_{s_{k-1}}, s_k)$
+;;@ $a_{s_1}, a_{s_2} \ldots a_{s_n},\ a_{s_k} = f(a_{s_{k-1}}, s_k)$
 (define (evolve-sequence evolve initial index)
   (define (evolve-next index prev acc)
     (if (null? index)
@@ -36,18 +36,18 @@
                 (append acc (list current))))))
   (evolve-next index initial (list initial)))
 
-;;@ $a_1,\ a_2\ \ldots\ a_n,\ a_k=f(a_{k-1})$
+;;@ $a_1, a_2 \ldots a_n,\ a_k=f(a_{k-1})$
 (define (evolve-series evolve initial n)
   (evolve-sequence evolve initial (enumerate-n n)))
 
-;;@ $x_1, x_2,\ \ldots\ x_n,\ x_k = a+h(k+\frac{k}{2}), h = (b-a)/n$
+;;@ $x_1, x_2 \ldots x_n,\ x_k = a+h(k-\frac{1}{2}), h = (b-a)/n$
 (define (split-interval a b n)
   (let ((step (/ (- b a) n)))
     (evolve-series (lambda (x n) (+ x step)) 
                    (+ a (/ step 2))
                    (- n 1))))
 
-;;@ $ 1/0!,\ 1/1!,\ 1/2! \ldots 1/(n-1)!$
+;;@ $ 1/0!, 1/1!, 1/2! \ldots 1/(n-1)!$
 (define (exp-series-coefficients n)
   (evolve-series (lambda (prev i) (/ prev i)) 
                  1
