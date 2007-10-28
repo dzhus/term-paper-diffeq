@@ -29,20 +29,20 @@
                  (cons (semantic-tag-name tag)
                        tag))
                tag-table)))
-    (switch-to-buffer buffer)
-    (let (result)
-      ;; cddddr is a Lisp-oriented hack to prevent tag itself from
-      ;; inclusion to dependency list
-      (dolist (lexem (cddddr (semantic-lex from to 100)) result)
-        (if (or (eq 'symbol (car lexem))
-                (eq 'NAME (car lexem)))
-            (let* ((lexem-string (buffer-substring 
-                                  (cadr lexem)
-                                  (cddr lexem)))
-                   (found-tag (assoc lexem-string
-                                     deps)))
-              (if found-tag
-                  (add-to-list 'result (cdr found-tag) t))))))))
+    (with-current-buffer buffer
+      (let (result)
+        ;; cddddr is a Lisp-oriented hack to prevent tag itself from
+        ;; inclusion to dependency list
+        (dolist (lexem (cddddr (semantic-lex from to 100)) result)
+          (if (or (eq 'symbol (car lexem))
+                  (eq 'NAME (car lexem)))
+              (let* ((lexem-string (buffer-substring 
+                                    (cadr lexem)
+                                    (cddr lexem)))
+                     (found-tag (assoc lexem-string
+                                       deps)))
+                (if found-tag
+                    (add-to-list 'result (cdr found-tag) t)))))))))
 
 ;; Print body of tag with specified name from specified file
 (defun print-tag-from-file (tag-name file-name)
