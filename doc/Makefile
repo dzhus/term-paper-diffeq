@@ -13,7 +13,7 @@ ifneq (${MAKELEVEL}, 0)
 %-full-listing.tex: ${SOURCEDIR}/% source-full-listing.sh source-full-listing.tpl.tex
 	$(SHELL) source-full-listing.sh $< > $@
 
-%-tag-listing.tex: ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/.*__//") extract-tag.sh tag-listing.sh tag-listing.tpl.tex grok-lisp.el
+%-tag-listing.tex: ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/.*__//") tag-listing.sh tag-listing.tpl.tex grok-lisp.el
 	$(SHELL) tag-listing.sh $(shell echo $* | sed -e "s/__.*//") $< > $@
 
 initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex

@@ -10,7 +10,13 @@
 # document using `\input`.
 
 
-SOURCE=$(./extract-tag.sh $1 $2)
+TAG=$1
+FILE=$2
+
+SOURCE=$(emacs --batch --load grok-lisp.el \
+    --exec "(print-tag-from-file \"${TAG}\" \"${FILE}\")" \
+    2> /dev/null \
+    | grep -v "[ ]*;; .*" | sed -e "s/^\([ ]*\);;@ /\1;; /")
 
 m4 --define="__SOURCE"="${SOURCE}" \
     tag-listing.tpl.tex
