@@ -33,7 +33,7 @@
       (let (result)
         ;; cddddr is a Lisp-oriented hack to prevent tag itself from
         ;; inclusion to dependency list
-        (dolist (lexem (cddddr (semantic-lex from to 100)) result)
+        (dolist (lexem (cddddr (semantic-lex from to 1.0e+INF)) result)
           (if (or (eq 'symbol (car lexem))
                   (eq 'NAME (car lexem)))
               (let* ((lexem-string (buffer-substring 
