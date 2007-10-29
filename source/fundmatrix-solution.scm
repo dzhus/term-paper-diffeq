@@ -58,24 +58,23 @@
                     (* +i k (- 1 A))))))
    fundamentals))
 
-;; Print approximate solution (tabulate u(x)) given right bound of
-;; interval, wave number, subintervals count and refraction function
-(define (print-all-solution right-bound wave-number
-                            subintervals function
-                            test-eps method-alias)
-  (let* ((fundamentals (build-fundamentals right-bound
-                                           subintervals
-                                           (variable-matrix f)))
-         (coeffs (find-A-B fundamentals
-                           wave-number
-                           right-bound))
-         (approx (approximate-solution fundamentals
-                                       (car coeffs)
-                                       wave-number right-bound)))
-    (print-approximate approx 0 right-bound)
-    (display "%%")
-    (newline)
-    (print-A-B coeffs test-eps)
-    (newline)
-    (display "method: ")
-    (display method-alias)))
+;; Return a pair (U . COEFFS), where U is a list of approximate
+;; function values on [0; right-bound] and COEFFS is (A . B) pair
+(define (get-solution right-bound wave-number
+                      subintervals function)
+  (let* ((fundamentals (build-fundamentals 
+                        right-bound
+                        subintervals
+                        (variable-matrix function)))
+         (coeffs (find-A-B 
+                  fundamentals
+                  wave-number
+                  right-bound))
+         (approx (approximate-solution 
+                  fundamentals
+                  (car coeffs)
+                  wave-number 
+                  right-bound)))
+    (cons approx coeffs)))
+    
+    

@@ -31,9 +31,54 @@
                (option-ref options 'test-epsilon  (number->string test-epsilon)))))
         (load-from-path (string-concatenate
                          (list method "-solution.scm")))
-        (print-all-solution right-bound
-                            wave-number
-                            subintervals
-                            f
-                            test-epsilon
-                            method)))))
+        (let ((solution (get-solution right-bound wave-number
+                                     subintervals f)))
+          (print-all-solution solution right-bound 
+                              test-epsilon method))))))
+
+;; Print approximate solution (tabulate u(x)) given right bound of
+;; interval, wave number, subintervals count and refraction function
+(define (print-all-solution solution right-bound test-epsilon used-method)
+  (let ((approx (car solution))
+        (coeffs (cdr solution)))
+    (print-approximate approx 0 right-bound)
+    (display "%%")
+    (newline)
+    (print-A-B coeffs test-epsilon)
+    (newline)
+    (display "method: ")
+    (display used-method)))
+
+
+;; Tabulate approximate solution (suitable for plotting tools) given a
+;; list of values and min/max variable values
+(define (print-approximate solution from to)
+  (let ((step (/ (- to from)
+                 (length solution))))
+    (for-each
+     (lambda (n)
+       (let ((z (list-ref solution (- n 1))))
+         (display (+ from (* (- n 0.5) step)))
+         (display " ")
+         (display (real-part z))
+         (display " ")
+         (display (imag-part z))
+         (newline)))
+     (enumerate-n (length solution)))))
+
+(define (print-A-B coeffs test-eps)
+  (let ((A (car coeffs))
+        (B (caadr coeffs)))
+  (display "A: ")
+  (format #t "~,5i" A)
+  (newline)
+  (display "B: ")
+  (format #t "~,5i" B)
+  (newline)
+  (display "conserves: ")
+  (if (energy-conserves? A B test-eps)
+      (display "yes")
+      (display "no"))
+  (newline)
+  (display "eps: ")
+  (display test-eps)))
