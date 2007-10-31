@@ -40,7 +40,7 @@
 (define (evolve-series evolve initial n)
   (evolve-sequence evolve initial (enumerate-n n)))
 
-;;@ $x_1, x_2 \ldots x_n,\ x_k = a+h(k-\frac{1}{2}), h = (b-a)/n$
+;;@ $x_1, x_2 \ldots x_{n-1},\ x_k = a+h(k-\frac{1}{2}), h = (b-a)/n$
 (define (split-interval a b n)
   (let ((step (/ (- b a) n)))
     (evolve-series (lambda (x n) (+ x step)) 
@@ -61,3 +61,8 @@
              (+ (expt (magnitude A) 2)
                 (expt (magnitude B) 2))))
      eps))
+
+;;@ $e^{ikx}$
+(define (wave k)
+  (lambda (x)
+    (exp (* +i k x))))
