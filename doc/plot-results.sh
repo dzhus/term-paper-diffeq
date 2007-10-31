@@ -12,7 +12,7 @@ TEMPFILE=$(mktemp /tmp/docXXXXXX)
 
 RESULTS=$1
 
-METHOD=$(grep "method: " ${RESULTS} | sed -e "s/method: //")
+METHOD=${1%-results}
 
 # Strip out everything except u(x) approximation
 cat ${RESULTS} | head -n $(($(grep -n "%%" ${RESULTS} | sed -e "s/:.*//")-1)) \
