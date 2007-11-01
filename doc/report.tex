@@ -18,6 +18,7 @@
 \newcommand{\filename}[1]{\texttt{#1}}
 \newcommand{\procname}[1]{\texttt{#1}}
 \providecommand{\abs}[1]{\left \lvert{#1}\right \rvert}
+\providecommand{\op}[1]{\mathrm{#1}}
 
 \usepackage{amsmath,amssymb}
 
@@ -365,10 +366,10 @@ u(x) =  \int \limits_{0}^{a} {\frac{e^{ik\abs{x-y}}}{2ik} (k^2-n(y))
 Сокращённо это интегральное уравнение записывается в таком виде:
 
 \begin{equation}\label{inteq-short}
-u = \mathrm{A}u + f
+u = \op{A}u + f
 \end{equation}
 
-Где $\mathrm{A}$ — интегральный оператор $\int_{0}^{a}
+Где $\op{A}$ — интегральный оператор $\int_{0}^{a}
 {\frac{e^{ik\abs{x-y}}}{2ik} (k^2-n(y)) u(y) dy}$, который действует на
 функцию $u(x)$.
 
@@ -401,12 +402,12 @@ u = u_0 + u_1 + u_2 + \ldots
 Его подстановка в \eqref{inteq-short} даёт следующее:
 
 \[
- u_0 + u_1 + u_2 + \ldots = \mathrm{A}u_0 + \mathrm{A}u_1 +
- \mathrm{A}u_2 + \ldots + f
+ u_0 + u_1 + u_2 + \ldots = \op{A}u_0 + \op{A}u_1 +
+ \op{A}u_2 + \ldots + f
 \]
 
-Если положить $u_0 = f,\ u_1 = \mathrm{A}u_0, \ldots\ u_{n+1} =
-\mathrm{A} u_n$, то таким выбором последовательных приближений это
+Если положить $u_0 = f,\ u_1 = \op{A}u_0, \ldots\ u_{n+1} =
+\op{A} u_n$, то таким выбором последовательных приближений это
 уравнение будет тождественно удовлетворено.
 
 После нахождения $u(x)$ коэффициенты $A$ и $B$ вычисляются из
