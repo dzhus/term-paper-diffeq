@@ -66,3 +66,8 @@
 (define (wave k)
   (lambda (x)
     (exp (* +i k x))))
+
+;; Get wave number from given n(x) function definition (it's
+;; considered to be constant equal to k^2 when x<0)
+(define (get-k function)
+  (sqrt (function -1)))

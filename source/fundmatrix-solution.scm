@@ -29,7 +29,7 @@
 
 ;; Find A, B coefficients of wave equations given a sequence of
 ;; fundamental matrices built for interval [0; right-bound] and k
-;; coefficient from wave equations
+;; coefficient (wave number)
 (define (find-A-B fundamentals k right-bound)
   (let ((fundamental (list-ref fundamentals
                                (- (length fundamentals) 1)))
@@ -60,21 +60,22 @@
 
 ;; Return a pair (U . COEFFS), where U is a list of approximate
 ;; function values on [0; right-bound] and COEFFS is (A . B) pair
-(define (get-solution right-bound wave-number
-                      subintervals function)
-  (let* ((fundamentals (build-fundamentals 
-                        right-bound
-                        subintervals
-                        (variable-matrix function)))
-         (coeffs (find-A-B 
-                  fundamentals
-                  wave-number
-                  right-bound))
-         (approx (approximate-solution 
-                  fundamentals
-                  (car coeffs)
-                  wave-number 
-                  right-bound)))
-    (cons approx coeffs)))
+(define (get-solution right-bound subintervals function)
+  (let ((k (get-k function)))
+    (let* ((fundamentals (build-fundamentals 
+                          right-bound
+                          subintervals
+                          (variable-matrix function)))
+           (coeffs (find-A-B 
+                    fundamentals
+                    k
+                    right-bound))
+           (A (car coeffs))
+           (B (cadr coeffs))
+           (approx (approximate-solution 
+                    fundamentals
+                    A k
+                    right-bound)))
+      (cons approx (cons A B)))))
     
     

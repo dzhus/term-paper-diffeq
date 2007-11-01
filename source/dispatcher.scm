@@ -8,7 +8,6 @@
   (define option-spec
     '((method (single-char #\m) (value #t))
       (right-bound (single-char #\a) (value #t))
-      (wave-number (single-char #\k) (value #t))
       (subintervals (single-char #\n) (value #t))
       (statement-file (single-char #\f) (value #t))
       (test-epsilon (single-char #\t) (value #t))))
@@ -20,9 +19,6 @@
              (right-bound
               (string->number
                (option-ref options 'right-bound (number->string right-bound))))
-             (wave-number
-              (string->number
-               (option-ref options 'wave-number (number->string wave-number))))
              (subintervals
               (string->number
                (option-ref options 'subintervals (number->string subintervals))))
@@ -31,13 +27,14 @@
                (option-ref options 'test-epsilon  (number->string test-epsilon)))))
         (load-from-path (string-concatenate
                          (list method "-solution.scm")))
-        (let ((solution (get-solution right-bound wave-number
-                                     subintervals f)))
+        (let ((solution (get-solution right-bound subintervals f)))
           (print-all-solution solution right-bound 
                               test-epsilon method))))))
 
-;; Print approximate solution (tabulate u(x)) given right bound of
-;; interval, wave number, subintervals count and refraction function
+;; Print approximate solution (tabulate u(x)) given solution structure
+;; from `get-solution` in method implementation modules, right bound
+;; of interval, subintervals count. Also print A, B values and used
+;; method name. Textual data exchange simplifies further processing.
 (define (print-all-solution solution right-bound test-epsilon used-method)
   (let ((approx (car solution))
         (coeffs (cdr solution)))
@@ -68,7 +65,7 @@
 
 (define (print-A-B coeffs test-eps)
   (let ((A (car coeffs))
-        (B (caadr coeffs)))
+        (B (cdr coeffs)))
   (display "A: ")
   (format #t "~,5i" A)
   (newline)

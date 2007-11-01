@@ -2,15 +2,14 @@
 ;; 
 ;; It must contain definition of a function (f x) preceded by one-line
 ;; `;;@ ` comments at top-level with TeX $n(x)$ function definition,
-;; as well as definition of variables `right-bound`, `wave-number`,
-;; `subintervals` and `test-epsilon`. Example:
+;; as well as definition of variables `right-bound`, `subintervals`
+;; and `test-epsilon`. Example:
 ;;
 ;; ;;@ $n(x) = x^2$
 ;; (define (f x)
 ;;   (expt x 2))
 ;;   
 ;; (define right-bound 2)
-;; (define wave-number 3)
 ;; (define subintervals 100)
 ;; (define test-epsilon 0.001)
 ;;
@@ -23,6 +22,5 @@
       36))
 
 (define right-bound 2)
-(define wave-number 7)
 (define subintervals 250)
 (define test-epsilon 0.000001)

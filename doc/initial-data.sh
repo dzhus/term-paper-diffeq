@@ -21,9 +21,6 @@ cat $1 | grep -v "[ ]*;; .*" > ${TEMPFILE}
 RIGHTBOUND=$(cat ${TEMPFILE} | grep right-bound | \
     sed -e "s/(define right-bound \(.*\))/\1/")
 
-WAVENUMBER=$(cat ${TEMPFILE} | grep wave-number | \
-    sed -e "s/(define wave-number \(.*\))/\1/")
-
 NTEX=$(cat ${TEMPFILE} | grep ';;@ \$n(x)' | \
     sed -e "s/;;@ //" | sed -e 's/^\$\(.*\)\$$/\1/g' | tr -d "\n")
 
@@ -34,5 +31,4 @@ NLISP=$(./tag-listing.sh f $1)
 m4 --define="__NLISP"="${NLISP}" \
     --define="__NTEX"="${NTEX}" \
     --define="__RIGHTBOUND"="${RIGHTBOUND}" \
-    --define="__WAVENUMBER"="${WAVENUMBER}" \
     initial-data.tpl.tex

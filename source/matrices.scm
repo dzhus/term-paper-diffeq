@@ -11,7 +11,7 @@
 (define (make-vector . items)
   items)
 
-(define (add-to-vector vector . items)
+(define (add-to-vector vector items)
   (append vector items))
 
 (define (get-row n matrix)
