@@ -1,3 +1,6 @@
+define(`__CONSERVE_yes', `Подтверждено')
+define(`__CONSERVE_no', `Не подтверждено')
+
 В результате использования метода были получены следующие результаты:
 
 \begin{equation}\label{__METHOD-results}
@@ -7,8 +10,12 @@
   \end{aligned}
 \end{equation}
 
-Подтверждено, что значения $A$ и $B$ удовлетворяют условию \ref{energy}:
+\emph{__CONSERVE_STATUS}, что значения $A$ и $B$ удовлетворяют условию \ref{energy}:
 
 \begin{displaymath}
   \abs{\left( \abs{A}^2 + \abs{B}^2 \right) - 1} < __EPS
 \end{displaymath}
+
+График построенного решения $u(x)$ внутри неоднородного слоя таков:
+
+\includegraphics{__METHOD-plot.mps}
