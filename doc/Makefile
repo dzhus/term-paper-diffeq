@@ -4,7 +4,7 @@ ${DOCNAME}_depend := $(shell texdepend -print=i -format=make ${DOCNAME}.tex \
 			     | sed -e "s/^.*= //")
 ifneq (${MAKELEVEL}, 0)
 
-.PRECIOUS: %-plot.mps
+.PRECIOUS: %-plot.mps %-results
 
 .SECONDEXPANSION:
 
@@ -19,7 +19,7 @@ ifneq (${MAKELEVEL}, 0)
 initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex
 	$(SHELL) initial-data.sh $< > $@
 
-%-results: ${INITIAL_DATA_FILE} $(wildcard ${SOURCEDIR}/*.scm) results.sh
+%-results: ${INITIAL_DATA_FILE} ${SOURCEDIR}/%-solution.scm ${SHARED_SOURCES} results.sh
 	$(SHELL) results.sh $< $* dispatcher.scm ${SOURCEDIR} > $@
 
 %-plot.mps: %-results plot-results.sh plot.tpl.mp

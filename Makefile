@@ -1,6 +1,7 @@
 export ROOT := $(abspath .)
 
 export SOURCEDIR := ${ROOT}/source
+export SHARED_SOURCES := $(foreach file,shared.scm matrices.scm gauss.scm,${SOURCEDIR}/${file})
 export DOCDIR := ${ROOT}/doc
 
 export INITIAL_DATA_FILE := ${SOURCEDIR}/statement.scm
