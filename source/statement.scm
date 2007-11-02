@@ -17,10 +17,10 @@
 
 ;;@ $n(x) = \left \{ \begin{array}{ll} 35+3(x-1)^2 & 0<x<2\\ 36 & x \leq 0,\ x \geq 2 \end{array} \right .$
 (define (f x)
-  (if (and (< x 2) (> x 0))
+  (if (and (> x 0) (< x 2))
       (+ 35 (* 3 (expt (- x 1) 2)))
       36))
 
 (define right-bound 2)
 (define subintervals 250)
-(define test-epsilon 0.000001)
+(define test-epsilon 0.0001)

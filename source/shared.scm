@@ -65,6 +65,10 @@
                 (expt (magnitude B) 2))))
      eps))
 
+;; Calculate a set of f(x) values on given [a; b] interval
+(define (tabulate-function f a b subintervals)
+  (map f (split-interval a b subintervals)))
+
 ;;@ $e^{ikx}$
 (define (wave k)
   (lambda (x)
