@@ -4,6 +4,9 @@
 (define (sum sequence)
   (fold + 0 sequence))
 
+;;@ $x^2$
+(define (sqr x) (* x x))
+
 ;;@ $( \ldots ((a_n \cdot x + a_{n-1}) \cdot x + a_{n-2}) \cdot x \ldots + a_1) \cdot x + a_0)$
 (define (general-horner-eval x coefficient-sequence
                              mult add zero)
@@ -71,3 +74,11 @@
 ;; considered to be constant equal to k^2 when x<0)
 (define (get-k function)
   (sqrt (function -1)))
+
+;; General iterative improvement method
+(define (iterative-improve good? improve)
+  (define (solve x)
+    (if (good? x)
+        x
+        (solve (improve x))))
+  solve)
