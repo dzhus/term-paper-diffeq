@@ -1,5 +1,3 @@
-(use-modules (srfi srfi-1))
-
 (load "shared.scm")
 (load "matrices.scm")
 (load "gauss.scm")
@@ -60,7 +58,7 @@
 
 ;; Return a pair (U . COEFFS), where U is a list of approximate
 ;; function values on [0; right-bound] and COEFFS is (A . B) pair
-(define (get-solution right-bound subintervals function)
+(define (get-solution right-bound subintervals function test-epsilon)
   (let ((k (get-k function)))
     (let* ((fundamentals (build-fundamentals 
                           right-bound
@@ -77,5 +75,3 @@
                     A k
                     right-bound)))
       (cons approx (cons A B)))))
-    
-    

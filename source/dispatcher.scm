@@ -27,9 +27,14 @@
                (option-ref options 'test-epsilon  (number->string test-epsilon)))))
         (load-from-path (string-concatenate
                          (list method "-solution.scm")))
-        (let ((solution (get-solution right-bound subintervals f)))
-          (print-all-solution solution right-bound 
-                              test-epsilon method))))))
+        (let ((solution (get-solution right-bound
+                                      subintervals
+                                      f
+                                      test-epsilon)))
+          (print-all-solution solution
+                              right-bound
+                              test-epsilon
+                              method))))))
 
 ;; Print approximate solution (tabulate u(x)) given solution structure
 ;; from `get-solution` in method implementation modules, right bound
