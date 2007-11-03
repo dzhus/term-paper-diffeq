@@ -36,6 +36,7 @@ m4 --define="__A"="${A}" \
     --define="__EPS"="${EPS}" \
     --define="__METHOD"="${METHOD}" \
     --define="__CONSERVE_STATUS"="${STATUS}" \
+    --define="__LABEL"="${METHOD}__${STATEMENT}.scm-results" \
     --define="__PLOT_PREFIX"="${PLOT_PREFIX}" \
     results.tpl.tex
 
