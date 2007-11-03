@@ -85,7 +85,9 @@
     (let* ((initial-solution
             ;; Trivial dummy function from «initial» solution is not
             ;; used ever
-            (cons '(0) (cons 0 0))))
+            (cons (tabulate-function (lambda (x) 0)
+                                     0 right-bound subintervals)
+                  (cons 0 0))))
       ((iterative-improve good? improve) initial-solution))))
 
 (define (get-solution refraction right-bound subintervals test-epsilon)
