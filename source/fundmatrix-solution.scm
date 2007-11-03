@@ -56,22 +56,32 @@
                     (* +i k (- 1 A))))))
    fundamentals))
 
-;; Return a pair (U . COEFFS), where U is a list of approximate
-;; function values on [0; right-bound] and COEFFS is (A . B) pair
+;; Keep doubling subintervals count until energy conserves.
+;; 
+;; Returns a pair (U . COEFFS), where U is an approximate solution
+;; _function_ and COEFFS is (A . B) pair
+(define (make-solution refract right-bound subintervals eps)
+  (let ((k (get-k refract)))
+    (define (improve solution)
+      (let* ((fundamentals (build-fundamentals 
+                            right-bound
+                            (* 2 (length (car solution)))
+                            (variable-matrix refract)))
+             (coeffs (find-A-B fundamentals k right-bound))
+             (A (car coeffs))
+             (approx (approximate-solution 
+                      fundamentals A k
+                      right-bound)))
+        (cons approx (cons A (cadr coeffs)))))
+    (define (good? solution)
+      (let* ((coeffs (cdr solution))
+             (A (car coeffs))
+             (B (cdr coeffs)))
+        (energy-conserves? A B eps)))
+    (let* ((initial-solution (cons
+                              (tabulate-function (lambda (x) x) 0 right-bound (/ subintervals 2))
+                              (cons 0 0))))
+      ((iterative-improve good? improve) initial-solution))))
+
 (define (get-solution right-bound subintervals function test-epsilon)
-  (let ((k (get-k function)))
-    (let* ((fundamentals (build-fundamentals 
-                          right-bound
-                          subintervals
-                          (variable-matrix function)))
-           (coeffs (find-A-B 
-                    fundamentals
-                    k
-                    right-bound))
-           (A (car coeffs))
-           (B (cadr coeffs))
-           (approx (approximate-solution 
-                    fundamentals
-                    A k
-                    right-bound)))
-      (cons approx (cons A B)))))
+  (make-solution function right-bound subintervals test-epsilon))
