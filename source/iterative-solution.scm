@@ -2,7 +2,7 @@
 
 ;;@ $\varphi \colon n(x), u(x) \rightarrow f(x) = e^{ik\abs{x-y}}(k^2-n(y))u(y)$
 (define (green-transform u n)
-  (let ((k (get-k n)))
+  (let ((k (get-wave-number n)))
     (lambda (x y)
       (* (exp (* +i k (abs (- x y))))
          (- (sqr k) (n y))
@@ -27,19 +27,19 @@
 
 ;;@ $\op{A} \colon \frac{1}{2ik} \int_0^a {e^{ik|x-y|}(k^2-n(y))u(y) dy} \circ u(x)$
 (define (green-integrate u n a subintervals)
-  (let ((k (get-k n)))
+  (let ((k (get-wave-number n)))
     (lambda (x)
       (/ ((integrate (green-transform u n) 0 a (/ subintervals 2)) x)
          (* 2 +i k)))))
 
-;; Find A, B, given solution u(x)
-(define (find-A-B u n a subintervals)
-  (let ((k (get-k n)))
-    (let ((A ((green-integrate u n a subintervals) 0))
+;; Find A, B, given solution u(x), n(x), [0;a] and subintervals count
+(define (find-A-B solution refraction right-bound subintervals)
+  (let ((k (get-wave-number refraction)))
+    (let ((A ((green-integrate solution refraction right-bound subintervals) 0))
           (B (+ (/ ((integrate (lambda (x y) (* (exp (* -i k y))
-                                                (- (sqr k) (n y))
-                                                (u y)))
-                               0 a subintervals) 0)
+                                                (- (sqr k) (refraction y))
+                                                (solution y)))
+                               0 right-bound subintervals) 0)
                    (* 2 +i k))
                 1)))
       (cons A B))))
@@ -49,15 +49,20 @@
 ;;
 ;; Returns a pair (U . COEFFS), where U is an approximate solution
 ;;_function_ and COEFFS is (A . B) pair
-(define (make-solution n a subintervals eps)
-  (let* ((k (get-k n))
+(define (make-solution refraction right-bound subintervals eps)
+  (let* ((k (get-wave-number refraction))
          (initial-solution (cons (wave k)
                                  (cons 0 0))))
     (define (improve solution)
       (let* ((u (lambda (x)
                   (+ ((car solution) x)
-                     ((green-integrate (car solution) n a subintervals) x))))
-             (coeffs (find-A-B u n a subintervals)))
+                     ((green-integrate 
+                       (car solution)
+                       refraction
+                       right-bound subintervals) x))))
+             (coeffs (find-A-B
+                      u refraction
+                      right-bound subintervals)))
         (cons u coeffs)))
     (define (good? solution)
       (let* ((coeffs (cdr solution))
@@ -66,9 +71,12 @@
         (energy-conserves? A B eps)))
     ((iterative-improve good? improve) initial-solution)))
 
-(define (get-solution right-bound subintervals function test-epsilon)
-  (let* ((k (get-k function))
-         (initial (wave k))
-         (solution (make-solution function right-bound subintervals test-epsilon)))
-    (cons (tabulate-function (car solution) 0 right-bound subintervals)
+(define (get-solution refraction right-bound subintervals test-epsilon)
+  (let* ((wave-number (get-wave-number refraction))
+         (initial (wave wave))
+         (solution (make-solution
+                    refraction
+                    right-bound subintervals test-epsilon)))
+    (cons (tabulate-function (car solution)
+                             0 right-bound subintervals)
           (cdr solution))))

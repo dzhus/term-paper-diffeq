@@ -60,17 +60,21 @@
 ;; 
 ;; Returns a pair (U . COEFFS), where U is an approximate solution
 ;; _function_ and COEFFS is (A . B) pair
-(define (make-solution refract right-bound subintervals eps)
-  (let ((k (get-k refract)))
+(define (make-solution refraction right-bound subintervals eps)
+  (let ((wave-number (get-wave-number refraction)))
     (define (improve solution)
       (let* ((fundamentals (build-fundamentals 
                             right-bound
                             (* 2 (length (car solution)))
-                            (variable-matrix refract)))
-             (coeffs (find-A-B fundamentals k right-bound))
+                            (variable-matrix refraction)))
+             (coeffs (find-A-B
+                      fundamentals
+                      wave-number
+                      right-bound))
              (A (car coeffs))
              (approx (approximate-solution 
-                      fundamentals A k
+                      fundamentals
+                      A wave-number
                       right-bound)))
         (cons approx (cons A (cadr coeffs)))))
     (define (good? solution)
@@ -78,10 +82,11 @@
              (A (car coeffs))
              (B (cdr coeffs)))
         (energy-conserves? A B eps)))
-    (let* ((initial-solution (cons
-                              (tabulate-function (lambda (x) x) 0 right-bound (/ subintervals 2))
-                              (cons 0 0))))
+    (let* ((initial-solution
+            ;; Trivial dummy function from «initial» solution is not
+            ;; used ever
+            (cons '(0) (cons 0 0))))
       ((iterative-improve good? improve) initial-solution))))
 
-(define (get-solution right-bound subintervals function test-epsilon)
-  (make-solution function right-bound subintervals test-epsilon))
+(define (get-solution refraction right-bound subintervals test-epsilon)
+  (make-solution refraction right-bound subintervals test-epsilon))

@@ -76,7 +76,7 @@
 
 ;; Get wave number from given n(x) function definition (it's
 ;; considered to be constant equal to k^2 when x<0)
-(define (get-k function)
+(define (get-wave-number function)
   (sqrt (function -1)))
 
 ;; General iterative improvement method
