@@ -32,15 +32,6 @@
       (/ ((integrate (green-transform u n) 0 a (/ subintervals 2)) x)
          (* 2 +i k)))))
 
-(define (improve-times u n a subintervals times)
-  (define (improve-once u)
-    (green-integrate u n a subintervals))
-  (if (= times 0)
-      u
-      (lambda (x)
-        (+ (u x)
-           ((improve-times (improve-once u) n a subintervals (- times 1)) x)))))
-
 ;; Find A, B, given solution u(x)
 (define (find-A-B u n a subintervals)
   (let ((k (get-k n)))
@@ -81,11 +72,3 @@
          (solution (make-solution function right-bound subintervals test-epsilon)))
     (cons (tabulate-function (car solution) 0 right-bound subintervals)
           (cdr solution))))
-
-;; (load "statement.scm")
-;; (let* ((k (get-k f))
-;;        (initial (wave k))
-;;        (u (improve-times (wave k) f right-bound subintervals 1)))
-;;   (for-each
-;;    (lambda (i) (display i) (newline))
-;;    (tabulate-solution u right-bound subintervals)))
