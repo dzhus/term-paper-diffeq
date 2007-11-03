@@ -5,10 +5,10 @@ verbatimtex
   \renewcommand{\Im}{\mathop{\mathrm{Im}}\nolimits}
   \renewcommand{\Re}{\mathop{\mathrm{Re}}\nolimits}
   \begin{document}
-  etex
+etex
   
   
-  input graph;
+input graph;
 
 filenametemplate "__PLOT_PREFIX-plot.mps";
 

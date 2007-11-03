@@ -1,7 +1,7 @@
 DOCNAME := report
-${DOCNAME}_depend := $(shell texdepend -print=i -format=make ${DOCNAME}.tex \
-			     | head -n 1 \
-			     | sed -e "s/^.*= //")
+
+include ${DOCNAME}-deps.mk
+
 ifneq (${MAKELEVEL}, 0)
 
 .PRECIOUS: %-plot.mps %-results
@@ -31,11 +31,15 @@ ifneq (${MAKELEVEL}, 0)
 %-results.tex: %-results %-plot.mps texify-results.sh results.tpl.tex
 	$(SHELL) texify-results.sh $< > $@
 
-${DOCNAME}.aux: ${${DOCNAME}_depend} ${DOCNAME}.tex
+${DOCNAME}.aux: ${INCLUDES} ${FIGS} ${DOCNAME}.tex
+	@echo $<
 	pdflatex ${DOCNAME}.tex
 
 ${DOCNAME}.pdf: report.aux
 	pdflatex ${DOCNAME}.tex
+
+${DOCNAME}-deps.mk: ${DOCNAME}.tex
+	texdepend -o $@ -print=if $<
 
 doc: ${DOCNAME}.pdf
 
