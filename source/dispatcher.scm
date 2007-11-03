@@ -3,6 +3,16 @@
 
 (load "shared.scm")
 
+;; Command line options override ones in statement file
+(define-macro (let-options opts . body)
+  `(let ,(map (lambda (opt-name)
+                `(,opt-name (string->number
+                             (option-ref options
+                                         ',opt-name
+                                         (number->string ,opt-name)))))
+              opts)
+     ,@body))
+
 ;; The «do stuff» procedure
 (define (dispatch args)
   (define option-spec
@@ -11,30 +21,21 @@
       (subintervals (single-char #\n) (value #t))
       (statement-file (single-char #\f) (value #t))
       (test-epsilon (single-char #\t) (value #t))))
-  (let ((options (getopt-long args option-spec)))
-    (let ((statement-file (option-ref options 'statement-file "statement.scm")))
-      (load-from-path statement-file)
-      (let* ((method (option-ref options 'method "fundmatrix"))
-             ;; Command line options override ones in statement file
-             (right-bound
-              (string->number
-               (option-ref options 'right-bound (number->string right-bound))))
-             (subintervals
-              (string->number
-               (option-ref options 'subintervals (number->string subintervals))))
-             (test-epsilon
-              (string->number
-               (option-ref options 'test-epsilon  (number->string test-epsilon)))))
-        (load-from-path (string-concatenate
-                         (list method "-solution.scm")))
-        (let ((solution (get-solution right-bound
-                                      subintervals
-                                      f
-                                      test-epsilon)))
-          (print-all-solution solution
-                              right-bound
-                              test-epsilon
-                              method))))))
+  (let* ((options (getopt-long args option-spec))
+         (statement-file (option-ref options 'statement-file "statement.scm")))
+    (load-from-path statement-file)
+    (let ((method (option-ref options 'method "fundmatrix")))
+      (let-options (right-bound subintervals test-epsilon)
+                   (load-from-path (string-concatenate
+                                    (list method "-solution.scm")))
+                   (let ((solution (get-solution right-bound
+                                                 subintervals
+                                                 f
+                                                 test-epsilon)))
+                     (print-all-solution solution
+                                         right-bound
+                                         test-epsilon
+                                         method))))))
 
 ;; Print approximate solution (tabulate u(x)) given solution structure
 ;; from `get-solution` in method implementation modules, right bound
