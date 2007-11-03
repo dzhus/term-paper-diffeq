@@ -16,11 +16,11 @@ ifneq (${MAKELEVEL}, 0)
 %-tag-listing.tex: ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/.*__//") tag-listing.sh tag-listing.tpl.tex grok-lisp.el
 	$(SHELL) tag-listing.sh $(shell echo $* | sed -e "s/__.*//") $< > $@
 
-initial-data.tex: ${INITIAL_DATA_FILE} initial-data.sh initial-data.tpl.tex
+%-initial-data.tex: ${SOURCEDIR}/% initial-data.sh initial-data.tpl.tex
 	$(SHELL) initial-data.sh $< > $@
 
-%-results: ${INITIAL_DATA_FILE} ${SOURCEDIR}/%-solution.scm ${SHARED_SOURCES} results.sh
-	$(SHELL) results.sh $< $* dispatcher.scm ${SOURCEDIR} > $@
+%-results: ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/.*__//") ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/__.*//")-solution.scm ${SHARED_SOURCES} results.sh
+	$(SHELL) results.sh $< $(shell echo $* | sed -e "s/__.*//") dispatcher.scm ${SOURCEDIR} > $@
 
 %-plot.mps: %-results plot-results.sh plot.tpl.mp
 	$(SHELL) plot-results.sh $<
