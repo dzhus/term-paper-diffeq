@@ -24,11 +24,6 @@ RIGHTBOUND=$(cat ${TEMPFILE} | grep right-bound | \
 NTEX=$(cat ${TEMPFILE} | grep ';;@ \$n(x)' | \
     sed -e "s/;;@ //" | sed -e 's/^\$\(.*\)\$$/\1/g' | tr -d "\n")
 
-# Extract Lisp definition
-
-NLISP=$(./tag-listing.sh f $1)
-
-m4 --define="__NLISP"="${NLISP}" \
-    --define="__NTEX"="${NTEX}" \
+m4 --define="__NTEX"="${NTEX}" \
     --define="__RIGHTBOUND"="${RIGHTBOUND}" \
     initial-data.tpl.tex
