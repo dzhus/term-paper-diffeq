@@ -2,7 +2,6 @@
 (require 'semanticdb)
 (semanticdb-toggle-global-mode)
 
-
 ;; Return a Semantic tag table for file
 (defun get-file-tags (file-name)
   (with-current-buffer 
@@ -72,7 +71,6 @@
 ;; Return a list of pairs (TAG . DEPS) where DEPS is a list of
 ;; functions TAG «depends» on
 (defun get-file-depgraph (file-name)
-  (interactive "fFile name: ")
   (let ((deep-tag-table (get-file-functions-deep file-name))
         (file-tag-table (get-file-functions file-name))
         (depgraph))
@@ -89,11 +87,10 @@
     (let ((depgraph (get-file-depgraph file)))
       (dolist (dep-list-for-tag depgraph)
         (let ((function-name (semantic-tag-name 
-                         (car dep-list-for-tag))))
+                              (car dep-list-for-tag))))
           (princ (format "\"%s\";\n" function-name))
           (dolist (dependency (cdr dep-list-for-tag))
             (princ (format "\"%s\" -> \"%s\";\n"
                      (semantic-tag-name dependency)
                      function-name)))))))
   (princ "}\n"))
-
