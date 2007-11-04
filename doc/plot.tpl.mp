@@ -13,7 +13,7 @@ input graph;
 filenametemplate "__PLOT_PREFIX.mps";
 
 beginfig(1);
-  draw begingraph(10cm, 7cm);
+  draw begingraph(10cm, 6cm);
     color real_color, imag_color;
     real_color = blue*(0.5+uniformdeviate(4)/10)+white*uniformdeviate(10)/100;
     imag_color = red*(0.5+uniformdeviate(4)/10)+white*uniformdeviate(10)/100;
