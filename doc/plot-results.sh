@@ -6,32 +6,26 @@
 # Usage:
 #
 #     ./plot-results.sh RESULTS
-#     
-
-TEMPFILE=$(mktemp /tmp/docXXXXXX)
+#
+# If RESULTS is `fundmatrix__exo-statement.scm-results`, the script
+# will produce `fundmatrix__exo-statement.scm-plot.mps`.
 
 RESULTS=$1
+
+TEMPFILE=$(mktemp /tmp/docXXXXXX)
+MP=$(mktemp /tmp/docXXXXXX)
 
 # Strip out everything except u(x) approximation
 cat ${RESULTS} | head -n $(($(grep -n "%%" ${RESULTS} | sed -e "s/:.*//")-1)) \
     > ${TEMPFILE}
 
-RE=$(mktemp /tmp/docXXXXXX)
-IM=$(mktemp /tmp/docXXXXXX)
-
-# Split Re(u) and Im(u) columns
-cut -d' ' -f1,2 ${TEMPFILE} > ${RE}
-cut -d' ' -f1,3 ${TEMPFILE} > ${IM}
-
 PLOT_PREFIX=${RESULTS/results/plot}
-
 
 # Generate `.mps` plot
 m4 --define="__PLOT_PREFIX"="${PLOT_PREFIX}" \
-    --define="__RE"="${RE}" \
-    --define="__IM"="${IM}" \
-    plot.tpl.mp > ${TEMPFILE}
+    --define="__DATA"="${TEMPFILE}" \
+    plot.tpl.mp > ${MP}
 
-mpost -interaction=nonstopmode ${TEMPFILE}
+mpost -interaction=nonstopmode ${MP}
     
-rm ${RE} ${IM} ${TEMPFILE}
+rm ${TEMPFILE} ${MP}
