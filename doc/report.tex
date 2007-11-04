@@ -17,6 +17,11 @@
 
 \newcommand{\filename}[1]{\texttt{#1}}
 \newcommand{\procname}[1]{\texttt{#1}}
+\newcommand{\includeplot}[2]{\begin{figure}[hb]
+    \centering
+    \includegraphics{#1__#2-plot.mps}
+    \caption{График $u(x)$ для функции преломления \eqref{#2}}
+\end{figure}}
 \providecommand{\abs}[1]{\left \lvert{#1}\right \rvert}
 \providecommand{\op}[1]{\mathrm{#1}}
 \providecommand{\comp}{\circ}
@@ -229,7 +234,7 @@ $\omega_{ij}^N(a)$.
 приближений фундаментальной матрицы на $[x_i; x_{i+1}]$ для $\forall
 i$.
 
-\newpage
+\clearpage
 \subsection{Реализация}
 
 Описание основных процедур, необходимых для реализации метода,
@@ -327,13 +332,12 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!}, \dotsc$ генерируется
 
 \input{energy-conserves?__shared.scm-tag-listing}
 
-\newpage
-\subsection{Исходные данные}
-\label{sec:initial}
+\clearpage
 
+\subsection{Исходные данные}
 \input{statement.scm-initial-data}
 
-В терминах Scheme функция преломления задётся следующим образом:
+В терминах Scheme она задаётся следующим образом:
 
 \input{f__statement.scm-tag-listing}
 
@@ -341,21 +345,25 @@ $\frac{1}{0!}, \frac{1}{1!}, \frac{1}{2!}, \dotsc$ генерируется
 
 \input{fundmatrix__statement.scm-results}
 
-\includegraphics{fundmatrix__statement.scm-plot.mps}
+\includeplot{fundmatrix}{statement.scm}
 
-\subsection{Альтернативный набор данных}
+\clearpage
+
+\subsubsection{Результат вычислений  с альтернативным набором исходных данных}
 
 Метод построения фундаментальных матриц применим в задачах с более
-сложными выражениями для $n(x)$. Далее представлены результаты работы
+сложными выражениями для $n(x)$ (но требуется, чтобы $n(x)$ была
+непрерывной внутри $[0;a]$). Далее представлены результаты работы
 с иными, нежели в предыдущем разделе, данными.
 
 \input{exo-statement.scm-initial-data}
 
 \input{fundmatrix__exo-statement.scm-results}
 
-\includegraphics{fundmatrix__exo-statement.scm-plot.mps}
+\includeplot{fundmatrix}{exo-statement.scm}
 
-\newpage
+\clearpage
+
 \section{Решение методом последовательных приближений}
 
 \subsection{Описание}
@@ -515,7 +523,8 @@ $\op{A}$ из \eqref{inteq-short}:
 \op{A}^2 u_0 \dotsb$ обеспечивается наличием константы $1/2ik$
 перед интегралом \eqref{inteq}, если данные $a, n(x), k$ таковы, что
 для $M=\max(k^2-n(x_0))$ выполняется:
-\begin{equation} \label{iter-converge-cond}
+
+\begin{equation}\label{iter-converge-cond}
   \frac{Ma}{2k}<1
 \end{equation}
 
@@ -595,10 +604,12 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \newpage
 \subsection{Результаты}
 
-Исходные данные к задаче приведены в разделе \ref{sec:initial} на
-странице \pageref{sec:initial}.
+Исходные данные к задаче приведены в разделе \ref{statement.scm} на
+странице \pageref{statement.scm}.
 
 \input{iterative__statement.scm-results}
+
+\includeplot{iterative}{statement.scm}
 
 \newpage
 \section{Сопоставление результатов}
