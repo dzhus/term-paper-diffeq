@@ -2,6 +2,14 @@ DOCNAME := report
 
 include ${DOCNAME}-deps.mk
 
+define get-target-source
+$(shell echo $1 | sed -e "s/.*__//")
+endef
+
+define get-target-method
+$(shell echo $1 | sed -e "s/__.*//")
+endef
+
 ifneq (${MAKELEVEL}, 0)
 
 .PRECIOUS: %-plot.mps %-results
@@ -10,20 +18,21 @@ ifneq (${MAKELEVEL}, 0)
 
 .PHONY: doc clean ${SOURCEDIR}
 
-%-full-listing.tex: ${SOURCEDIR}/% source-full-listing.sh source-full-listing.tpl.tex
+%-full-listing.tex: ${SOURCEDIR}/% \
+                    source-full-listing.sh source-full-listing.tpl.tex
 	$(SHELL) source-full-listing.sh $< > $@
 
-%-tag-listing.tex: ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/.*__//") \
+%-tag-listing.tex: ${SOURCEDIR}/$$(call get-target-source,$$*) \
                    tag-listing.sh tag-listing.tpl.tex grok-lisp.el
 	$(SHELL) tag-listing.sh $(shell echo $* | sed -e "s/__.*//") $< > $@
 
 %-initial-data.tex: ${SOURCEDIR}/% initial-data.sh initial-data.tpl.tex
 	$(SHELL) initial-data.sh $< > $@
 
-%-results: ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/.*__//") \
-           ${SOURCEDIR}/$$(shell echo $$* | sed -e "s/__.*//")-solution.scm \
+%-results: ${SOURCEDIR}/$$(call get-target-source,$$*) \
+           ${SOURCEDIR}/$$(call get-target-method,$$*)-solution.scm \
            ${SHARED_SOURCES} results.sh
-	$(SHELL) results.sh $< $(shell echo $* | sed -e "s/__.*//") dispatcher.scm ${SOURCEDIR} > $@
+	$(SHELL) results.sh $< $(call get-target-method,$*) dispatcher.scm ${SOURCEDIR} > $@
 
 %-plot.mps: %-results plot-results.sh plot.tpl.mp
 	$(SHELL) plot-results.sh $<
@@ -32,7 +41,6 @@ ifneq (${MAKELEVEL}, 0)
 	$(SHELL) texify-results.sh $< > $@
 
 ${DOCNAME}.aux: ${INCLUDES} ${FIGS} ${DOCNAME}.tex
-	@echo $<
 	pdflatex ${DOCNAME}.tex
 
 ${DOCNAME}.pdf: report.aux
