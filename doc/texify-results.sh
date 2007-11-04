@@ -21,23 +21,13 @@ A=$(grep "A:" ${TEMPFILE} | sed -e "s/.*: //")
 B=$(grep "B:" ${TEMPFILE} | sed -e "s/.*: //")
 
 EPS=$(grep "eps:" ${TEMPFILE} | sed -e "s/.*: //")
-STATUS="__CONSERVE_"$(grep "conserves: " ${TEMPFILE} | sed -e "s/.*: //")
-
-# Generate a proper plot filename prefix according to one being
-# generated in `plot-results.sh`
-t=${RESULTS/*__/}
-STATEMENT=${t/.scm-results/}
-METHOD=${RESULTS/__*/}
-
-PLOT_PREFIX=${METHOD}__${STATEMENT}
+CONSERVE_STATUS="__CONSERVE_"$(grep "conserves: " ${TEMPFILE} | sed -e "s/.*: //")
 
 m4 --define="__A"="${A}" \
     --define="__B"="${B}" \
     --define="__EPS"="${EPS}" \
-    --define="__METHOD"="${METHOD}" \
-    --define="__CONSERVE_STATUS"="${STATUS}" \
-    --define="__LABEL"="${METHOD}__${STATEMENT}.scm-results" \
-    --define="__PLOT_PREFIX"="${PLOT_PREFIX}" \
+    --define="__CONSERVE_STATUS"="${CONSERVE_STATUS}" \
+    --define="__LABEL"="${RESULTS}" \
     results.tpl.tex
 
 rm ${TEMPFILE}

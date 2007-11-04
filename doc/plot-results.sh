@@ -23,13 +23,8 @@ IM=$(mktemp /tmp/docXXXXXX)
 cut -d' ' -f1,2 ${TEMPFILE} > ${RE}
 cut -d' ' -f1,3 ${TEMPFILE} > ${IM}
 
-# Generate a filename for plot (w/o `.scm` as LaTeX will complain about
-# unknown extension otherwise)
-t=${RESULTS/*__/}
-STATEMENT=${t/.scm-results/}
-METHOD=${RESULTS/__*/}
+PLOT_PREFIX=${RESULTS/results/plot}
 
-PLOT_PREFIX=${METHOD}__${STATEMENT}
 
 # Generate `.mps` plot
 m4 --define="__PLOT_PREFIX"="${PLOT_PREFIX}" \

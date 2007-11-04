@@ -10,7 +10,7 @@ etex;
   
 input graph;
 
-filenametemplate "__PLOT_PREFIX-plot.mps";
+filenametemplate "__PLOT_PREFIX.mps";
 
 beginfig(1);
   draw begingraph(10cm, 7cm);
