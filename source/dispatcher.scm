@@ -51,7 +51,6 @@
     (display "method: ")
     (display used-method)))
 
-
 ;; Tabulate approximate solution (suitable for plotting tools) given a
 ;; list of values and min/max variable values
 (define (print-approximate solution from to)
@@ -60,11 +59,10 @@
     (for-each
      (lambda (n)
        (let ((z (list-ref solution (- n 1))))
-         (display (+ from (* (- n 0.5) step)))
-         (display " ")
-         (display (real-part z))
-         (display " ")
-         (display (imag-part z))
+         (display (format "~f ~f ~f"
+                          (+ from (* (- n 0.5) step))
+                          (real-part z)
+                          (imag-part z)))
          (newline)))
      (enumerate-n (length solution)))))
 
