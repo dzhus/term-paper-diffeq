@@ -1,17 +1,17 @@
 (load "shared.scm")
 
-;;@ $\varphi (n(x), u(x), g(x, y)) = f(x,y) = e^{ik \cdot g(x, y)}(k^2-n(y))u(y)$
+;;@ $\varphi (n(x), u(x), g(x, t)) = f(x,t) = e^{ik \cdot g(x, t)}(k^2-n(t))u(t)$
 (define (green-subtransform u n g)
   (let ((k (get-wave-number n)))
-    (lambda (x y)
-      (* (exp (* +i k (g x y)))
-         (- (sqr k) (n y))
-         (u y)))))
+    (lambda (x t)
+      (* (exp (* +i k (g x t)))
+         (- (sqr k) (n t))
+         (u t)))))
 
-;;@ $\hat{\varphi} (n(x), u(x), g(x, y) ) = f(x,y) = e^{ik \abs{(x-y}}(k^2-n(y))u(y)$
+;;@ $\hat{\varphi} (n(x), u(x)) = f(x,t) = e^{ik \abs{(x-t}}(k^2-n(t))u(t)$
 (define (green-transform u n)
   (green-subtransform u n
-                      (lambda (x y) (abs (- x y)))))
+                      (lambda (x t) (abs (- x t)))))
 
 ;; Simpson's formulæ for functions of two arguments
 ;;@ $\int_a^b f(x) dx$
@@ -21,16 +21,16 @@
       (* (/ h 3) 
          (+ (f x a)
             (* 4 (sum
-                  (map (lambda (y) (f x y))
+                  (map (lambda (t) (f x t))
                        (split-interval a b
                                        (/ subintervals 2)))))
             (* 2 (sum
-                  (map (lambda (y) (f x y))
+                  (map (lambda (t) (f x t))
                        (split-interval (+ a h) (- b h)
                                        (- (/ subintervals 2) 1)))))
             (f x b))))))
 
-;;@ $\op{A} \colon \frac{1}{2ik} \int_0^a {e^{ik|x-y|}(k^2-n(y))u(y) dy} \circ u(x)$
+;;@ $\op{A} \comp u(x): \colon \frac{1}{2ik} \int_0^a {e^{ik|x-t|}(k^2-n(t))u(t) dt}$
 (define (green-integrate u refraction right-bound subintervals)
   (let ((k (get-wave-number refraction)))
     (lambda (x)
@@ -42,13 +42,13 @@
 (define (find-A-B solution refraction right-bound subintervals)
   (let ((k (get-wave-number refraction)))
     (let (
-          ;;@ $A = \frac{1}{2ik}\int_0^a{e^{iky}(k^2-n(y))u(y)dy}$
+          ;;@ $A = \frac{1}{2ik}\int_0^a{e^{ikt}(k^2-n(t))u(t)dt}$
           (A ((green-integrate solution refraction
                                right-bound subintervals) 0))
-          ;;@ $B = \frac{1}{2ik}\int_0^a{e^{-iky}(k^2-n(y))u(y)dy} + 1$
+          ;;@ $B = \frac{1}{2ik}\int_0^a{e^{-ikt}(k^2-n(t))u(t)dt} + 1$
           (B (+ (/ ((integrate (green-subtransform
                                 solution refraction 
-                                (lambda (x y) (- y)))
+                                (lambda (x t) (- t)))
                                0 right-bound subintervals) 0)
                    (* 2 +i k))
                 1)))
