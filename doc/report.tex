@@ -41,11 +41,11 @@
 \title{Курсовая работа по теме\\ «Обыкновенные дифференциальные уравнения»}
 \maketitle
 
-\newpage
+\clearpage
 
 \tableofcontents
 
-\newpage
+\clearpage
 \part{Постановка задачи}
 
 \section{Математический аспект}
@@ -95,7 +95,7 @@ Ae^{-ikx}$. Задача состоит в приближённом постро
   \abs{A}^2 + \abs{B}^2 = 1
 \end{equation}
 
-\newpage
+\clearpage
 \part{Решение}
 
 \section{Общие замечания}
@@ -460,7 +460,7 @@ u = u_0 + u_1 + u_2 + \dotsb
 После нахождения $u(x)$ коэффициенты $A$ и $B$ вычисляются из
 \eqref{int-A} и \eqref{int-B}, соответственно.
 
-\newpage
+\clearpage
 \subsection{Реализация}
 
 Для обеспечения работы программы с широким диапазоном исходных данных
@@ -613,7 +613,7 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 эффективен, поскольку сводит задачу нахождения интеграла к совсем
 элементарным операциям.
 
-\newpage
+\clearpage
 \subsection{Результаты}
 
 Исходные данные к задаче приведены в разделе \ref{statement.scm} на
@@ -623,7 +623,7 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 
 \includeplot{iterative}{statement.scm}
 
-\newpage
+\clearpage
 \section{Сопоставление результатов}
 
 Сравнение результатов вычислений для одних и тех же исходных данных
@@ -631,7 +631,7 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \pageref{fundmatrix__statement.scm-results} и
 \pageref{iterative__statement.scm-results}).
 
-\newpage
+\clearpage
 \appendix
 \part{Исходные тексты}
 \section{Общие файлы}
@@ -639,22 +639,22 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \input{matrices.scm-full-listing}
 \input{gauss.scm-full-listing}
 
-\newpage
+\clearpage
 \section{Метод построения  фундаментальной матрицы}
 
 \input{fundmatrix-solution.scm-full-listing}
 
-\newpage
+\clearpage
 \section{Метод последовательных приближений}
 
 \input{iterative-solution.scm-full-listing}
 
-\newpage
+\clearpage
 \section{Диспетчер}
 
 \input{dispatcher.scm-full-listing}
 
-\newpage
+\clearpage
 \part{Информация о документе}
 
 Данный документ был подготовлен с использованием \LaTeX{}.
