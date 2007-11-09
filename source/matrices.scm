@@ -2,33 +2,22 @@
 
 (load "shared.scm")
 
-(define (make-row . items)
+(define (vector . items)
   items)
 
-(define (make-matrix . rows)
+(define (matrix . rows)
   rows)
 
-(define (make-vector . items)
-  items)
+(define row
+  vector)
 
-(define (add-to-vector vector items)
-  (append vector items))
+(define (get-item vector n)
+  (list-ref vector (- n 1)))
 
-(define (get-row n matrix)
-  (list-ref matrix (- n 1)))
-
-(define (get-column n matrix)
-  (map (lambda (row) (list-ref row (- n 1)))
-       matrix))
-
-(define (row-item n row)
-  (list-ref row (- n 1)))
-
-(define (first-row matrix)
-  (get-row 1 matrix))
+(define get-row get-item)
 
 (define (first-column matrix)
-  (get-column 1 matrix))
+  (map car matrix))
 
 ;; Square matrix dimension
 (define (matrix-size m)
@@ -43,6 +32,7 @@
                  m)
     1 0)))
 
+;;@ $M \times N$
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
     (map (lambda (row)
@@ -76,14 +66,19 @@
               (enumerate-n n)))
        (enumerate-n n)))
 
-;;@ $A = (a_{ij} = \delta^i_j)_{n \times n}$
+;;@ $\delta^i_j$
+(define (kronecker i j)
+  (if (= i j) 1 0))
+
+;;@ $E = (\delta^i_j)_{n \times n}$
 (define (identity-matrix n)
-  (map (lambda (row)
-         (map (lambda (i) (if (= i row)
-                              1
-                              0))
-              (enumerate-n n)))
-       (enumerate-n n)))
+  (map
+   (lambda (i)
+     (map
+      (lambda (j)
+        (kronecker i j))
+      (enumerate-n n)))
+   (enumerate-n n)))
 
 ;;@ $f(x, y, z) = e^{A(x)(y-z)}$
 (define (matrix-exp A n)

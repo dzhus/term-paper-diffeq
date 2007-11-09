@@ -13,6 +13,7 @@
    1
    (enumerate-n (length lst))))
 
+;;@ $l_1, \dotsc, l_i, l_j, \dotsc, l_n \rightarrow l_1, \dotsc, l_j, l_i, \dotsc, l_n$
 (define (swap-items i j lst)
   (map
    (lambda (index)
@@ -23,57 +24,51 @@
              (list-ref lst (- index 1)))))
    (enumerate-n (length lst))))
 
-;; Solve a linear system with square matrix A, given A is invertible
-;; @correct
-(define (solve-linear coeffs vector)
-  ;; Make all zeroes in `coeff` first column (except first row)
-  (define (top-left coeffs)
-    (caar coeffs))
-  (define (coeffs-reduce coeffs)
+;; Solve a system of linear equations given its matrix and , given A is _invertible_
+(define (solve-linear A v)
+  (define (top-left equations)
+    (caar equations))
+  (define (top-right equations)
+    (let ((first (car equations)))
+      (get-item first (length first))))
+  (define (row-reduce equations)
     (map
-     (lambda (coeff-row)
+     (lambda (equation)
        (map
-        (lambda (first-row coeff)
+        (lambda (first-eq coeff)
           (- coeff
-             (* first-row
-                (/ (car coeff-row)
-                   (top-left coeffs)))))
-        (cdr (car coeffs))
-        (cdr coeff-row)))
-     (cdr coeffs)))
-  ;; Perform the same operation upon a vector
-  (define (vector-reduce vector coeffs)
-    (map
-     (lambda (coeff-row vector-row)
-       (- vector-row
-          (* (car vector)
-             (/ (car coeff-row)
-                (top-left coeffs)))))
-     (cdr coeffs)
-     (cdr vector)))
-  (if (= (matrix-size coeffs) 1)
-      ;; Solve trivial equation (ax=c) immediately
-      (if (= (top-left coeffs) 0)
-          (error "Zero determinant!" coeffs)
-          (make-vector (/ (car vector)
-                          (top-left coeffs))))
-      ;; Choose maximum non-zero element in first column and make that
-      ;; row a new top to avoid accidental division by zero (non-zero
-      ;; element always exists as A is invertible)
-      (let ((next-row (max-nonzero-index
-                       (first-column coeffs))))
-          (let ((coeffs (swap-items 1 next-row coeffs))
-                (vector (swap-items 1 next-row vector)))
-            (let ((subsolution (solve-linear 
-                                (coeffs-reduce coeffs)
-                                (vector-reduce vector
-                                               coeffs))))
-              (add-to-vector
-               ;; Solve an equation with only 1 variable (backward
-               ;; pass)
-               (solve-linear (make-matrix (make-row (top-left coeffs)))
-                             (make-vector (- (first vector)
-                                             (sum (map * 
-                                                       (cdr (car coeffs))
-                                                       subsolution)))))
-               subsolution))))))
+           (* first-eq
+              (/ (car equation)
+                 (top-left equations)))))
+        (cdr (car equations))
+        (cdr equation)))
+     (cdr equations)))
+  ;; Solve a system of linear equations given its augmented matrix
+  (define (solve-equations equations)
+    (if (= (matrix-size equations) 1)
+        ;; Solve trivial equation (ax=c) immediately
+        (vector (/ (top-right equations)
+                   (top-left equations)))
+        ;; Choose maximum element in first column and make that row a
+        ;; new top to avoid accidental division by zero (non-zero
+        ;; element always exists as A is invertible)
+        (let* ((next-row (max-nonzero-index
+                         (first-column equations)))
+               (equations (swap-items 1 next-row equations))
+               (subsolution (solve-equations 
+                             (row-reduce equations))))
+          (append
+           ;; Solve an equation with only 1 variable (backward
+           ;; pass)
+           (solve-equations (matrix
+                             (row (top-left equations)
+                                  (- (top-right equations)
+                                     (sum (map * 
+                                               (drop-right
+                                                (cdr (car equations)) 1)
+                                               subsolution))))))
+           subsolution))))
+  (let ((augmented (map (lambda (matrix-row vector-item)
+                          (append matrix-row (list vector-item)))
+                        A v)))
+    (solve-equations augmented)))
