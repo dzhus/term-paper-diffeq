@@ -8,13 +8,13 @@
          (- (sqr k) (n t))
          (u t)))))
 
-;;@ $\hat{\varphi} (n(x), u(x)) = f(x,t) = e^{ik \abs{(x-t}}(k^2-n(t))u(t)$
+;;@ $\hat{\varphi} (n(x), u(x)) = f(x,t) = e^{ik \abs{x-t}}(k^2-n(t))u(t)$
 (define (green-transform u n)
   (green-subtransform u n
                       (lambda (x t) (abs (- x t)))))
 
 ;; Simpson's formulæ for functions of two arguments
-;;@ $\int_a^b f(x) dx$
+;;@ $\int \limits_a^b {f(x, t) dt}$
 (define (integrate f a b subintervals)
   (let ((h (/ (- b a) subintervals)))
     (lambda (x)
@@ -30,7 +30,7 @@
                                        (- (/ subintervals 2) 1)))))
             (f x b))))))
 
-;;@ $\op{A} \comp u(x): \colon \frac{1}{2ik} \int_0^a {e^{ik|x-t|}(k^2-n(t))u(t) dt}$
+;;@ $\op{A} \comp u(x) \colon \frac{1}{2ik} \int_0^a {e^{ik|x-t|}(k^2-n(t))u(t) dt}$
 (define (green-integrate u refraction right-bound subintervals)
   (let ((k (get-wave-number refraction)))
     (lambda (x)
