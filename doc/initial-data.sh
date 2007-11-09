@@ -24,7 +24,7 @@ RIGHTBOUND=$(cat ${TEMPFILE} | grep right-bound | \
 NTEX=$(cat ${TEMPFILE} | grep ';;@ \$n(x)' | \
     sed -e "s/;;@ //" | sed -e 's/^\$\(.*\)\$$/\1/g' | tr -d "\n")
 
-LABEL=$(basename ${1})
+LABEL=$(basename ${1})"-initial-data"
 
 m4 --define="__NTEX"="${NTEX}" \
     --define="__RIGHTBOUND"="${RIGHTBOUND}" \

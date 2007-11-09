@@ -20,7 +20,7 @@
 \newcommand{\includeplot}[2]{\begin{figure}[hb]
     \centering
     \includegraphics{#1__#2-plot.mps}
-    \caption{График $u(x)$ для функции преломления \eqref{#2}}
+    \caption{График $u(x)$ для функции преломления \eqref{#2-initial-data}}
 \end{figure}}
 \providecommand{\abs}[1]{\left \lvert{#1}\right \rvert}
 \providecommand{\op}[1]{\mathrm{#1}}
@@ -616,8 +616,9 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \clearpage
 \subsection{Результаты}
 
-Исходные данные к задаче приведены в разделе \ref{statement.scm} на
-странице \pageref{statement.scm}.
+Исходные данные к задаче приведены в разделе
+\ref{statement.scm-initial-data} на странице
+\pageref{statement.scm-initial-data}.
 
 \input{iterative__statement.scm-results}
 
@@ -627,9 +628,12 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \section{Сопоставление результатов}
 
 Сравнение результатов вычислений для одних и тех же исходных данных
-(см. с. \pageref{statement.scm}) при помощи двух методов (см. страницы
-\pageref{fundmatrix__statement.scm-results} и
-\pageref{iterative__statement.scm-results}).
+(см. с. \pageref{statement.scm-initial-data}) при помощи двух методов
+— построением фундаментальной матрицы
+(с. \pageref{fundmatrix__statement.scm-results}) и решением
+интегрального уравнения последовательными приближениями
+(с. \pageref{iterative__statement.scm-results}) — позволяет проверить
+корректность реализации обоих методов:
 
 \clearpage
 \appendix
