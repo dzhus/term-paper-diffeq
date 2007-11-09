@@ -14,7 +14,7 @@ filenametemplate "__PLOT_PREFIX.mps";
 
 beginfig(1);
   draw begingraph(10cm, 6cm);
-    for file = "__DATA":
+    for file = __DATA:
       color real_color, imag_color;
       path real_plot, imag_plot;
     
@@ -26,10 +26,10 @@ beginfig(1);
         augment.imag_plot(f1, f3););
       
       gdraw real_plot withpen pencircle scaled 1.5 withcolor real_color;
-      glabel.ulft(btex $\Re$ etex, 1) withcolor real_color*0.8;
+      __LABEL(glabel.ulft(btex $\Re$ etex, 1) withcolor real_color*0.8;)
       
       gdraw imag_plot withpen pencircle scaled 1.5 withcolor imag_color;
-      glabel.llft(btex $\Im$ etex, 1) withcolor imag_color*0.8;
+      __LABEL(glabel.llft(btex $\Im$ etex, 1) withcolor imag_color*0.8;)
 
     endfor;
     pickup pencircle scaled 1.1;

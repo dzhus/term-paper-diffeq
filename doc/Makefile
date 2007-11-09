@@ -10,9 +10,14 @@ define get-target-method
 $(shell echo $1 | sed -e "s/__.*//")
 endef
 
+# Make a list of all result files for given statement file
+define all-results
+$(foreach method,${ALL_METHODS},${method}__$1-results)
+endef
+
 ifneq (${MAKELEVEL}, 0)
 
-.PRECIOUS: %-plot.mps %-results
+.PRECIOUS: %-plot.mps %-results %-all-plots.mps
 
 .SECONDEXPANSION:
 
@@ -33,6 +38,10 @@ ifneq (${MAKELEVEL}, 0)
            ${SOURCEDIR}/$$(call get-target-method,$$*)-solution.scm \
            ${SHARED_SOURCES} results.sh
 	$(SHELL) results.sh $< $(call get-target-method,$*) dispatcher.scm ${SOURCEDIR} > $@
+
+%-all-plots.mps: $(call all-results,%) \
+                 plot-results.sh plot.tpl.mp
+	$(SHELL) plot-results.sh $(call all-results,$*)
 
 %-plot.mps: %-results plot-results.sh plot.tpl.mp
 	$(SHELL) plot-results.sh $<
