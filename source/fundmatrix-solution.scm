@@ -46,7 +46,7 @@
 
 ;; Approximate u(x) on [0; right-bound] given a sequence of
 ;; fundamental matrices and A, k coefficients
-(define (approximate-solution fundamentals A k right-bound)
+(define (approximate-solution fundamentals A k)
   (map
    (lambda (matrix)
      (caar
@@ -74,8 +74,7 @@
              (A (car coeffs))
              (approx (approximate-solution 
                       fundamentals
-                      A wave-number
-                      right-bound)))
+                      A wave-number)))
         (cons approx (cons A (cadr coeffs)))))
     (define (good? solution)
       (let* ((coeffs (cdr solution))
