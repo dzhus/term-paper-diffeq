@@ -21,11 +21,13 @@ A=$(grep "A:" ${TEMPFILE} | sed -e "s/.*: //")
 B=$(grep "B:" ${TEMPFILE} | sed -e "s/.*: //")
 
 EPS=$(grep "eps:" ${TEMPFILE} | sed -e "s/.*: //")
+TIME=$(grep "time:" ${TEMPFILE} | sed -e "s/.*: //")
 CONSERVE_STATUS="__CONSERVE_"$(grep "conserves: " ${TEMPFILE} | sed -e "s/.*: //")
 
 m4 --define="__A"="${A}" \
     --define="__B"="${B}" \
     --define="__EPS"="${EPS}" \
+    --define="__TIME"="${TIME}" \
     --define="__CONSERVE_STATUS"="${CONSERVE_STATUS}" \
     --define="__LABEL"="${RESULTS}" \
     results.tpl.tex

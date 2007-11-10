@@ -1,3 +1,4 @@
+(use-modules ((srfi srfi-19) :renamer (symbol-prefix-proc 'srfi-19:)))
 (use-modules (ice-9 getopt-long))
 (use-modules (ice-9 format))
 
@@ -15,6 +16,9 @@
 
 ;; The «do stuff» procedure
 (define (dispatch args)
+  (define (get-seconds time)
+    (+ (* 1.0 (/ (srfi-19:time-nanosecond time) (expt 10 9)))
+       (srfi-19:time-second time)))
   (define option-spec
     '((method (single-char #\m) (value #t))
       (right-bound (single-char #\a) (value #t))
@@ -28,19 +32,23 @@
       (let-options (right-bound subintervals test-epsilon)
                    (load-from-path (string-concatenate
                                     (list method "-solution.scm")))
-                   (let ((solution (get-solution 
-                                    f right-bound
-                                    subintervals
-                                    test-epsilon)))
+                   (let* ((start-time (srfi-19:current-time))
+                          (solution (get-solution 
+                                     f right-bound
+                                     subintervals
+                                     test-epsilon))
+                          (end-time (srfi-19:current-time))
+                          (time-taken (srfi-19:time-difference end-time start-time)))
                      (print-all-solution solution 
                                          right-bound
-                                         test-epsilon method))))))
+                                         test-epsilon method
+                                         (get-seconds time-taken)))))))
 
 ;; Print approximate solution (tabulate u(x)) given solution structure
 ;; from `get-solution` in method implementation modules, right bound
 ;; of interval, subintervals count. Also print A, B values and used
 ;; method name. Textual data exchange simplifies further processing.
-(define (print-all-solution solution right-bound test-epsilon used-method)
+(define (print-all-solution solution right-bound test-epsilon used-method time-taken)
   (let ((approx (car solution))
         (coeffs (cdr solution)))
     (print-approximate approx 0 right-bound)
@@ -49,7 +57,10 @@
     (print-A-B coeffs test-epsilon)
     (newline)
     (display "method: ")
-    (display used-method)))
+    (display used-method)
+    (newline)
+    (display "time: ")
+    (display time-taken)))
 
 ;; Tabulate approximate solution (suitable for plotting tools) given a
 ;; list of values and min/max variable values
