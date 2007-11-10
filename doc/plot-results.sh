@@ -59,4 +59,4 @@ m4 --define="__PLOT_PREFIX"="${PLOT_PREFIX}" \
 
 mpost -interaction=nonstopmode ${MP}
 
-rm ${MP} $(echo ${DATAFILES} | sed -e "s/\"//g" | sed -e "s/,/ /")
+rm ${MP} $(echo ${DATAFILES} | sed -e "s/\"//g" | sed -e "s/,/ /g")
