@@ -22,6 +22,8 @@
     \includegraphics{#1__#2-plot.mps}
     \caption{График $u(x)$ для функции преломления \eqref{#2-initial-data}}
 \end{figure}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
 \providecommand{\abs}[1]{\left \lvert{#1}\right \rvert}
 \providecommand{\op}[1]{\mathrm{#1}}
 \providecommand{\comp}{\circ}
@@ -67,9 +69,9 @@
 \begin{subequations}\label{conds}
   \begin{align}
     u(0-0)& = u(0+0)&
-    u(a-0)& = u(a+0)& \\
-    u'(0-0)& = u'(0+0)&
-    u'(a-0)& = u'(a+0)&
+    u'(0-0)& = u'(0+0)&\label{conds-left} \\
+    u(a-0)& = u(a+0)&
+    u'(a-0)& = u'(a+0)&\label{conds-right}
   \end{align}
 \end{subequations}
 
@@ -187,7 +189,7 @@ a]$, таким образом, позволит получить искомые
 на плоско-слоистую с большим числом однородных слоёв.
 
 Рассматриваемый интервал разбивается на $N$ интервалов точками
-$x_i = \frac{a}{N}i$, $i = 1 \ldots N$, в середине каждого из
+$x_i = \frac{a}{N}i$, $i = 1 \dotso N$, в середине каждого из
 которых берётся точка $\overline{x_i} = \frac{a}{N}(i+\frac{i}{2})$. В
 данной точке функция $n(x)$ аппроксимируется ступенчатой функцией
 $\overline{n}(x) = n(\overline{x_i})$, так что \eqref{mdeq} обращается
@@ -258,7 +260,7 @@ i$.
 f(a_{s_{k-1}}, s_{k-1})$
 (см. с. \pageref{shared.scm-full-listing}). Из определения
 \procname{build-fundamentals} видно, что роль $s_k$ выполняют точки $x_i
-= \frac{a}{N}i$ с $i = 1 \ldots N$, а $a_{s_{k-1}}$ — приближение
+= \frac{a}{N}i$ с $i = 1 \dotso N$, а $a_{s_{k-1}}$ — приближение
 фундаментальной матрицы на предыдущем отрезке (на первом шаге
 $\Omega_N$ приближается единичной матрицей). Комбинируются же эти
 значения при помощи матричного умножения, как следует из \eqref{fmx}.
@@ -602,10 +604,8 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \paragraph{Использование готового выражения первообразной}
 
 Первообразная $e^{ik\abs{x-t}}(k^2-n(t))u(t)$ по $t$ может быть
-получена сторонними средствами — в другой программе (впрочем, в итоге
-это приводит к косвенному использованию средства уже описанного
-средства символьного интегрирования) или вручную (что является
-единственным универсальным и наиболее гибким методом
+получена сторонними средствами — в другой программе или вручную (что
+является единственным универсальным и наиболее гибким методом
 интегрирования). По затратам на количество операций, выполняемых на
 стороне описываемой в настоящей работе программы, этот подход наиболее
 эффективен, поскольку сводит задачу нахождения интеграла к совсем
@@ -621,6 +621,79 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \input{iterative__statement.scm-results}
 
 \includeplot{iterative}{statement.scm}
+
+\clearpage
+\section{Решение методом коллокации}
+\subsection{Описание}
+Рассмотрим данное по условию дифференциальное уравнение \eqref{deq}:
+
+\begin{equation}\label{inteq-eps}
+  \epsilon [u(x)] = u'' + n(x) u(x) = 0
+\end{equation}
+
+Будем искать его решение в виде
+
+\begin{equation}\label{colloc-approx}
+  U_n(x) = \phi_0(x) + \sum_{m=1}^n{C_m \phi_m(x)}
+\end{equation}
+
+Здесь $\phi_m(x)$ — система линейно независимых \emph{базисных}
+функций. Подставив \eqref{colloc-approx} в \eqref{inteq-eps}, получим
+невязку $\epsilon [U_n(x)]$:
+
+\[
+\epsilon[U_n(x)]=\left [\phi_0(x)+\sum_{m=1}^n{C_m \phi_m(x)} \right
+]''+
+n(x){\left [\phi_0(x)+\sum_{m=1}^n{C_m \phi_m(x)} \right ]}
+\]
+
+или
+
+\begin{equation}\label{colloc-eps}
+\epsilon[U_n(x)]=\psi_0(x)+\sum_{m=1}^n{C_m \psi_m(x)}
+\end{equation}
+
+где
+
+\begin{align*}
+\psi_0(x)& =\phi_0''(x) + n(x) \phi_0(x) \\
+\psi_m(x)& =\phi_m''(x) + n(x) \phi_m(x)
+\end{align*}
+
+Метод коллокации предполагает поиск значений $C_m$ таких, что
+\eqref{inteq-eps} обращается в 0 в заданной системе из $n$ \emph{точек
+  коллокации} $0 \leq x_1 < \dotsb < x_n \leq a$ принадлежащих
+рассматриваемому отрезку $[0;a]$:
+
+\begin{equation}
+  \epsilon[U_n(x_j)] = 0,\qquad j = 1 \dotso n
+\end{equation}
+
+Используя \eqref{inteq-eps} получаем систему из $n$ линейных уравнений
+для определения значений $C_m$:
+
+\begin{equation}\label{colloc-system}
+  \sum_{m=1}^n{C_m\psi_m(x_j)} = -\psi_0(x_j),\qquad j = 1 \dotso n
+\end{equation}
+
+В случае совместности \eqref{colloc-system} найденные коэффициенты
+$C_m$ используются в выражении для приближённого решения
+\eqref{colloc-approx}.
+
+\subsubsection{О выборе системы базисных функций}
+В уравнении \eqref{colloc-eps} члены $\psi_0(x)$ и $\psi_m(x)$
+разделены не случайно: при выборе системы $\phi_k$ (а значит и
+$\psi_k$) требуется учитывать набор краевых условий \eqref{conds}.
+
+Метод коллокации требует от первой базисной функции $\phi_0(x)$
+удовлетворения набору неоднородных краевых условий \eqref{conds}, а от
+$\phi_m(x),\ m>0$ — удовлетворения соответствующим однородным краевым
+условиями.
+
+\subsection{Реализация}
+
+\clearpage
+\subsection{Результаты}
 
 \clearpage
 \section{Сопоставление результатов}
@@ -647,14 +720,18 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 \input{gauss.scm-full-listing}
 
 \clearpage
-\section{Метод построения  фундаментальной матрицы}
+\section{Реализации методов решения}
+\subsection{Метод построения  фундаментальной матрицы}
 
 \input{fundmatrix-solution.scm-full-listing}
 
 \clearpage
-\section{Метод последовательных приближений}
+\subsection{Метод последовательных приближений}
 
 \input{iterative-solution.scm-full-listing}
+
+\clearpage
+\subsection{Метод коллокации}
 
 \clearpage
 \section{Диспетчер}
@@ -676,5 +753,7 @@ e^{ikx},\ A \comp A \comp A \comp e^{ikx},\dotsc$, количество
 
 Для автоматического определения зависимостей
 \LaTeX{}-файла использовалась утилита \texttt{texdepend}.
+
+
 
 \end{document}
