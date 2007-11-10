@@ -35,7 +35,7 @@
   (let ((k (get-wave-number refraction)))
     (lambda (x)
       (/ ((integrate (green-transform u refraction) 
-                     0 right-bound (/ subintervals 2)) x)
+                     0 right-bound subintervals) x)
          (* 2 +i k)))))
 
 ;; Find A, B, given solution u(x), n(x), [0;a] and subintervals count
