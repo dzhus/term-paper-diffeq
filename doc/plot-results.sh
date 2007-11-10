@@ -39,12 +39,14 @@ if (( $#==1 ))
 then
     PLOT_PREFIX=${RESULTS/results/plot}
     LABEL="\`\$1'"
+    PEN="single"
 else
     # Warning: script uses name of statement file of the _first_
     # argument in the name of resulting MPS image.
     PLOT_PREFIX=${1/*__/}
     PLOT_PREFIX=${PLOT_PREFIX%-results}"-all-plots"
     LABEL=""
+    PEN="multi"
 fi
 
 
@@ -52,6 +54,7 @@ fi
 m4 --define="__PLOT_PREFIX"="${PLOT_PREFIX}" \
     --define="__LABEL"="${LABEL}" \
     --define="__DATA"="${DATAFILES}" \
+    --define="__PEN"="__PEN_${PEN}" \
     plot.tpl.mp > ${MP}
 
 mpost -interaction=nonstopmode ${MP}
