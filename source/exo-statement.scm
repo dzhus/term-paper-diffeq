@@ -15,10 +15,10 @@
 ;;
 ;; REAL INITIAL DATA STARTS BELOW:
 
-;;@ $n(x) = \left \{ \begin{array}{ll} 35+e^x x^5 & 0<x<2\\ 100 & x \leq 0,\ x \geq 2 \end{array} \right .$
+;;@ $n(x) = \begin{cases} \frac{1}{x+0.1}+e^x x^5 & 0<x<2\\ 100 & x \leq 0,\ x \geq 2 \end{cases}$
 (define (f x)
   (if (and (> x 0) (< x 2))
-      (+ 35 (* (exp x) (expt x 5)))
+      (+ (/ 1 (+ 0.1 x)) (* (exp x) (expt x 5)))
       100))
 
 (define right-bound 2)

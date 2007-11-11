@@ -15,7 +15,7 @@
 ;;
 ;; REAL INITIAL DATA STARTS BELOW:
 
-;;@ $n(x) = \left \{ \begin{array}{ll} 35+3(x-1)^2 & 0<x<2\\ 36 & x \leq 0,\ x \geq 2 \end{array} \right .$
+;;@ $n(x) = \begin{cases} 35+3(x-1)^2 & 0<x<2\\ 36 & x \leq 0,\ x \geq 2 \end{cases}$
 (define (f x)
   (if (and (> x 0) (< x 2))
       (+ 35 (* 3 (expt (- x 1) 2)))
