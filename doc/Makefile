@@ -50,10 +50,10 @@ ifneq (${MAKELEVEL}, 0)
 	$(SHELL) texify-results.sh $< > $@
 
 ${DOCNAME}.aux: ${INCLUDES} ${FIGS} ${DOCNAME}.tex
-	pdflatex ${DOCNAME}.tex
+	pdflatex ${DOCNAME}
 
 ${DOCNAME}.pdf: report.aux
-	pdflatex ${DOCNAME}.tex
+	pdflatex ${DOCNAME}
 
 ${DOCNAME}-deps.mk: ${DOCNAME}.tex
 	texdepend -o $@ -print=if $<
