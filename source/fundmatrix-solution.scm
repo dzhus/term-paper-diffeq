@@ -60,7 +60,7 @@
 ;; 
 ;; Returns a pair (U . COEFFS), where U is an approximate solution
 ;; _function_ and COEFFS is (A . B) pair
-(define (make-solution refraction right-bound subintervals eps)
+(define (get-solution refraction right-bound subintervals eps)
   (let ((wave-number (get-wave-number refraction)))
     (define (improve solution)
       (let* ((fundamentals (build-fundamentals 
@@ -88,6 +88,3 @@
                                      0 right-bound subintervals)
                   (cons 0 0))))
       ((iterative-improve good? improve) initial-solution))))
-
-(define (get-solution refraction right-bound subintervals test-epsilon)
-  (make-solution refraction right-bound subintervals test-epsilon))
