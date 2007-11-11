@@ -44,7 +44,7 @@
 (define (evolve-series evolve initial n)
   (evolve-sequence evolve initial (enumerate-n n)))
 
-;;@ $x_1, x_2, \dotsc, x_{n-1},\ x_k = a+h(k-\frac{1}{2}), h = (b-a)/n$
+;;@ $x_1, x_2, \dotsc, x_n,\ x_k = a+h(k-\frac{1}{2}), h = (b-a)/n$
 (define (split-interval a b n)
   (let ((step (/ (- b a) n)))
     (evolve-series (lambda (x n) (+ x step)) 
@@ -74,7 +74,7 @@
      eps))
 
 ;; Calculate a set of f(x) values on given [a; b] interval
-;;@ $f(x_1), f(x_2), \dotsc, f(x_{n-1}),\ x_k = a+h(k-\frac{1}{2}), h = (b-a)/n$
+;;@ $f(x_1), f(x_2), \dotsc, f(x_n),\ x_k = a+h(k-\frac{1}{2}), h = (b-a)/n$
 (define (tabulate-function f a b subintervals)
   (map f (split-interval a b subintervals)))
 
