@@ -49,10 +49,12 @@ ifneq (${MAKELEVEL}, 0)
 %-results.tex: %-results %-plot.mps texify-results.sh results.tpl.tex
 	$(SHELL) texify-results.sh $< > $@
 
-${DOCNAME}.aux: ${INCLUDES} ${FIGS} ${DOCNAME}.tex
+${DOCNAME}.aux: ${INCLUDES} ${FIGS} ${DOCNAME}.tex ${DOCNAME}.bib
 	pdflatex ${DOCNAME}
+	bibtex8 -B ${DOCNAME}
 
 ${DOCNAME}.pdf: report.aux
+	pdflatex ${DOCNAME}
 	pdflatex ${DOCNAME}
 
 ${DOCNAME}-deps.mk: ${DOCNAME}.tex
