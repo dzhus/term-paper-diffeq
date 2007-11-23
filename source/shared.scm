@@ -51,13 +51,6 @@
                    (+ a (/ step 2))
                    (- n 1))))
 
-;;@ $x_0, x_1, x_2, \dotsc, x_n,\ x_k = a+kh, h = (b-a)/n$
-(define (split-interval-bounds a b n)
-  (let ((initial-step (/ (- b a) n)))
-    (split-interval (- a (/ initial-step 2))
-                    (+ b (/ initial-step 2))
-                    (+ n 1))))
-
 ;;@ $ 1/0!, 1/1!, 1/2!, \dotsc, 1/(n-1)!$
 (define (exp-series-coefficients n)
   (evolve-series (lambda (prev i) (/ prev i)) 

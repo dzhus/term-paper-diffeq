@@ -24,7 +24,8 @@
              (list-ref lst (- index 1)))))
    (enumerate-n (length lst))))
 
-;; Solve a system of linear equations given its matrix and , given A is _invertible_
+;; Solve a system of linear equations given its matrix A and right
+;; vector v, given A is _invertible_
 (define (solve-linear A v)
   (define (top-left equations)
     (caar equations))

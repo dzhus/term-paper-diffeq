@@ -23,4 +23,4 @@
 
 (define right-bound 2)
 (define subintervals 250)
-(define test-epsilon 0.00001)
+(define test-epsilon 0.000001)

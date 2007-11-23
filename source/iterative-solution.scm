@@ -1,6 +1,6 @@
 (load "shared.scm")
 
-;;@ $\varphi (n(x), u(x), g(x, t)) = f(x,t) = e^{ik \cdot g(x, t)}(k^2-n(t))u(t)$
+;;@ $\varphi (u(x), n(x), g(x, t)) = f(x,t) = e^{ik \cdot g(x, t)}(k^2-n(t))u(t)$
 (define (green-subtransform u n g)
   (let ((k (get-wave-number n)))
     (lambda (x t)
@@ -8,7 +8,7 @@
          (- (sqr k) (n t))
          (u t)))))
 
-;;@ $\hat{\varphi} (n(x), u(x)) = f(x,t) = e^{ik \abs{x-t}}(k^2-n(t))u(t)$
+;;@ $\hat{\varphi} (u(x), n(x)) = f(x,t) = e^{ik \abs{x-t}}(k^2-n(t))u(t)$
 (define (green-transform u n)
   (green-subtransform u n
                       (lambda (x t) (abs (- x t)))))
