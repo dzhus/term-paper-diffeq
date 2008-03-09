@@ -53,7 +53,7 @@ ${DOCNAME}.aux: ${INCLUDES} ${FIGS} ${DOCNAME}.tex ${DOCNAME}.bib
 	pdflatex ${DOCNAME}
 	bibtex8 -B ${DOCNAME}
 
-${DOCNAME}.pdf: report.aux
+${DOCNAME}.pdf: ${DOCNAME}.aux
 	pdflatex ${DOCNAME}
 	pdflatex ${DOCNAME}
 
