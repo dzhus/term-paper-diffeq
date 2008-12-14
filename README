@@ -1,0 +1,11 @@
+You'll need modern TeX distribution (TeX Live 2008 is ok) with
+METAPOST, GNU Guile, GNU Emacs (with recent CEDET version), GNU Make,
+bash, m4, sed, patched texdepend to «build» this paper.
+
+texdepend patch which allows using of several additional characters in
+`\input` commands is available from the author of this paper.
+
+As of December 2008, `grok-lisp.el` is desperately broken, resulting
+in empty gaps instead of Scheme sources in paper.
+
+Feel free to mail author: dima@sphinx.net.ru
