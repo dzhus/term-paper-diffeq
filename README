@@ -5,7 +5,13 @@ bash, m4, sed, patched texdepend to «build» this paper.
 texdepend patch which allows using of several additional characters in
 `\input` commands is available from the author of this paper.
 
-As of December 2008, `grok-lisp.el` is desperately broken, resulting
+As of December 2008, `grok-lisp.el` is desperately BROKEN, resulting
 in empty gaps instead of Scheme sources in paper.
+
+See http://sphinx.net.ru/blog/entry/latex-autobuild/ to find out about
+techniques used to generate this paper.
+
+This short paper was originally written in 2007 and is now preserved
+for «historical» purposes 
 
 Feel free to mail author: dima@sphinx.net.ru
